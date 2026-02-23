@@ -41,7 +41,9 @@ export default function RootLayout({
         <ThemeProvider>
           <BudgetProvider>
             <Header />
-            <main className="mx-auto max-w-md px-4 pb-24 pt-18">{children}</main>
+            <main className="mx-auto max-w-md px-4 pb-24 pt-18 md:ml-56 md:mr-6 md:max-w-none md:px-6 md:pb-8 md:pt-22">
+              {children}
+            </main>
             <BottomNav />
           </BudgetProvider>
         </ThemeProvider>

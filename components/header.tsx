@@ -28,11 +28,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4">
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md md:left-56">
+        <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4 md:h-16 md:max-w-none md:px-6">
           <Link href="/" className="flex items-center gap-2.5">
             <LogoMark
-              className="h-6 w-6"
+              className="h-16 w-16"
               style={{ color: "var(--logo)" }}
               aria-hidden
             />

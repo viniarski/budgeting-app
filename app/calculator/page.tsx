@@ -56,49 +56,42 @@ const BREAKDOWN_ITEMS = [
     category: "needs" as const,
     percentage: 40,
     icon: Home,
-    colour: "bg-blue-500",
   },
   {
     label: "Groceries",
     category: "needs" as const,
     percentage: 30,
     icon: UtensilsCrossed,
-    colour: "bg-orange-500",
   },
   {
     label: "Transport",
     category: "needs" as const,
     percentage: 15,
     icon: Bus,
-    colour: "bg-purple-500",
   },
   {
     label: "Bills & Subs",
     category: "needs" as const,
     percentage: 15,
     icon: Lightbulb,
-    colour: "bg-cyan-500",
   },
   {
     label: "Going Out",
     category: "wants" as const,
     percentage: 50,
     icon: PartyPopper,
-    colour: "bg-pink-500",
   },
   {
     label: "Shopping",
     category: "wants" as const,
     percentage: 30,
     icon: PartyPopper,
-    colour: "bg-rose-500",
   },
   {
     label: "Hobbies",
     category: "wants" as const,
     percentage: 20,
     icon: PartyPopper,
-    colour: "bg-amber-500",
   },
 ]
 
@@ -339,9 +332,7 @@ export default function CalculatorPage() {
                           key={item.label}
                           className="flex items-center gap-3 rounded-lg border border-border bg-card p-2.5"
                         >
-                          <div
-                            className={`flex h-8 w-8 items-center justify-center rounded-md ${item.colour} text-white`}
-                          >
+                          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent/10 text-accent">
                             <Icon className="h-4 w-4" />
                           </div>
                           <span className="flex-1 text-sm">{item.label}</span>

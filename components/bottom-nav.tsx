@@ -34,16 +34,18 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom">
-      <div className="mx-auto flex h-16 max-w-md items-center justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom md:top-0 md:right-auto md:w-56 md:border-r md:border-t-0 md:bg-card/95 md:backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-md items-center justify-around md:mx-0 md:h-full md:max-w-none md:flex-col md:items-stretch md:justify-start md:gap-2 md:px-3 md:pt-20">
         {tabs.map((tab) => {
           const isActive = isTabActive(tab.href)
           return (
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors ${
-                isActive ? "text-accent" : "text-muted hover:text-foreground"
+              className={`flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors md:flex-row md:gap-3 md:rounded-xl md:px-4 md:py-3 md:text-sm ${
+                isActive
+                  ? "text-accent md:bg-accent/10"
+                  : "text-muted hover:text-foreground md:hover:bg-background/70"
               }`}
             >
               {tab.href === "/add" ? (
