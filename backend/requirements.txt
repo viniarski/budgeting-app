@@ -1,0 +1,6 @@
+flask
+flask-cors
+python-dotenv
+bcrypt
+
+# pip install -r requirements.txt
