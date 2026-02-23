@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useBudget } from "@/contexts/budget-context"
+import { useTheme } from "@/contexts/theme-context"
 import { ALL_CATEGORIES, CategoryTemplate } from "@/lib/constants"
 import { formatCurrency } from "@/lib/budget-utils"
 import { Budget, BudgetPeriod, Category } from "@/lib/types"
 import StepAmount from "@/components/setup/step-amount"
 import StepCategories from "@/components/setup/step-categories"
-import { Loader2, RotateCcw, Pencil, Wallet } from "lucide-react"
+import { Loader2, RotateCcw, Pencil, Wallet, Sun, Moon } from "lucide-react"
 
 const PERIOD_LABELS: Record<BudgetPeriod, string> = {
   weekly: "Weekly",
@@ -19,6 +20,7 @@ const PERIOD_LABELS: Record<BudgetPeriod, string> = {
 export default function SettingsPage() {
   const router = useRouter()
   const { state, dispatch, isHydrated } = useBudget()
+  const { theme, toggleTheme } = useTheme()
   const [isEditing, setIsEditing] = useState(false)
   const [editStep, setEditStep] = useState(1)
 
@@ -190,6 +192,42 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-bold">Settings</h1>
+
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h2 className="mb-3 font-semibold">Appearance</h2>
+        <button
+          onClick={toggleTheme}
+          className="flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:border-accent/50"
+        >
+          <span className="text-muted">Theme</span>
+          <span className="flex items-center gap-2">
+            {theme === "light" ? (
+              <>
+                <Sun className="h-4 w-4 text-accent" />
+                <span>Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="h-4 w-4 text-accent" />
+                <span>Dark</span>
+              </>
+            )}
+            <span
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                theme === "light"
+                  ? "border-accent bg-accent/20"
+                  : "border-border bg-card"
+              }`}
+            >
+              <span
+                className={`absolute top-1 h-4 w-4 rounded-full bg-accent transition-all ${
+                  theme === "light" ? "left-6" : "left-1"
+                }`}
+              />
+            </span>
+          </span>
+        </button>
+      </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="mb-3 flex items-center justify-between">

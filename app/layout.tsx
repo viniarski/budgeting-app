@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { BudgetProvider } from "@/contexts/budget-context"
+import { ThemeProvider } from "@/contexts/theme-context"
 import Header from "@/components/header"
 import BottomNav from "@/components/bottom-nav"
 
@@ -37,11 +38,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
-        <BudgetProvider>
-          <Header />
-          <main className="mx-auto max-w-md px-4 pb-24 pt-18">{children}</main>
-          <BottomNav />
-        </BudgetProvider>
+        <ThemeProvider>
+          <BudgetProvider>
+            <Header />
+            <main className="mx-auto max-w-md px-4 pb-24 pt-18">{children}</main>
+            <BottomNav />
+          </BudgetProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
