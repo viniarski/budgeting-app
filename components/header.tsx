@@ -14,14 +14,12 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { useBudget } from "@/contexts/budget-context"
-import { useTheme } from "@/contexts/theme-context"
 import LogoMark from "@/components/logo-mark"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
   const { state, dispatch, isHydrated } = useBudget()
-  const { theme } = useTheme()
 
   function handleReset() {
     dispatch({ type: "RESET" })
@@ -34,7 +32,8 @@ export default function Header() {
         <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2.5">
             <LogoMark
-              className={`h-6 w-6 ${theme === "light" ? "text-black" : "text-accent"}`}
+              className="h-6 w-6"
+              style={{ color: "var(--logo)" }}
               aria-hidden
             />
             <span className="text-base font-bold">UniWallet</span>

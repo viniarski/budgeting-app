@@ -124,8 +124,10 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs text-muted">Good {getGreeting()}</p>
-        <h1 className="text-xl font-bold">{budget.name}</h1>
+        <p className="text-center text-xs text-muted">Good {getGreeting()}</p>
+        <h1 className="text-center text-xl font-bold uppercase tracking-wide">
+          {budget.name}
+        </h1>
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-5">

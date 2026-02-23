@@ -26,7 +26,9 @@ export default function AddExpensePage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-bold">Add Expense</h1>
+      <h1 className="mb-6 text-center text-xl font-bold uppercase tracking-wide">
+        Add Expense
+      </h1>
       <AddExpenseForm />
     </div>
   )

@@ -160,8 +160,12 @@ export default function OffersPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold">Student Offers</h1>
-        <p className="text-xs text-muted">Discounts & deals for students</p>
+        <h1 className="text-center text-xl font-bold uppercase tracking-wide">
+          Student Offers
+        </h1>
+        <p className="text-center text-xs text-muted">
+          Discounts & deals for students
+        </p>
       </div>
 
       {/* Search */}

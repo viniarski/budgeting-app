@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { formatCurrency } from "@/lib/budget-utils"
 import {
-  Calculator,
   PoundSterling,
   Home,
   UtensilsCrossed,
@@ -136,8 +135,12 @@ export default function CalculatorPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold">Budget Calculator</h1>
-        <p className="text-xs text-muted">Plan how to split your money</p>
+        <h1 className="text-center text-xl font-bold uppercase tracking-wide">
+          Budget Calculator
+        </h1>
+        <p className="text-center text-xs text-muted">
+          Plan how to split your money
+        </p>
       </div>
 
       {/* Income input */}

@@ -4,6 +4,7 @@
   --background: #0a0a0a;
   --foreground: #ededed;
   --accent: #10b981;
+  --logo: #10b981;
   --card: #141414;
   --border: #262626;
   --muted: #737373;
@@ -13,6 +14,7 @@
   --background: #f8fafc;
   --foreground: #0f172a;
   --accent: #059669;
+  --logo: #000000;
   --card: #ffffff;
   --border: #dbe2ea;
   --muted: #64748b;
@@ -22,6 +24,7 @@
   --background: #0f1026;
   --foreground: #f5f1ff;
   --accent: #ff7a59;
+  --logo: #ff7a59;
   --card: #191b3a;
   --border: #323569;
   --muted: #aaa3c7;
