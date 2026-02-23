@@ -81,19 +81,33 @@ input[type="number"] {
   }
 
   .desktop-sidebar {
+    width: 14rem;
     transform: translateX(0);
-    transition: transform 180ms ease;
+    transition:
+      width 180ms ease,
+      transform 180ms ease;
   }
 
   body[data-sidebar="hidden"] .desktop-header {
-    left: 0;
+    left: 4.5rem;
   }
 
   body[data-sidebar="hidden"] .desktop-main {
-    margin-left: 0;
+    margin-left: 4.5rem;
   }
 
   body[data-sidebar="hidden"] .desktop-sidebar {
-    transform: translateX(-100%);
+    width: 4.5rem;
+    transform: translateX(0);
+  }
+
+  body[data-sidebar="hidden"] .desktop-sidebar-link {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  body[data-sidebar="hidden"] .desktop-sidebar-label {
+    display: none;
   }
 }
