@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 import {
   Menu,
   X,
-  Wallet,
   User,
   Settings,
   PiggyBank,
@@ -15,11 +14,14 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { useBudget } from "@/contexts/budget-context"
+import { useTheme } from "@/contexts/theme-context"
+import LogoMark from "@/components/logo-mark"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
   const { state, dispatch, isHydrated } = useBudget()
+  const { theme } = useTheme()
 
   function handleReset() {
     dispatch({ type: "RESET" })
@@ -31,9 +33,10 @@ export default function Header() {
       <header className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-white">
-              <Wallet className="h-4 w-4" />
-            </div>
+            <LogoMark
+              className={`h-6 w-6 ${theme === "light" ? "text-black" : "text-accent"}`}
+              aria-hidden
+            />
             <span className="text-base font-bold">UniWallet</span>
           </Link>
 

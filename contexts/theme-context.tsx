@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
-type ThemeMode = "dark" | "light"
+export type ThemeMode = "dark" | "light" | "fancy"
 
 const THEME_STORAGE_KEY = "uniwallet-theme"
 
@@ -18,7 +18,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     if (typeof window === "undefined") return "dark"
     const stored = localStorage.getItem(THEME_STORAGE_KEY)
-    return stored === "light" || stored === "dark" ? stored : "dark"
+    return stored === "light" || stored === "dark" || stored === "fancy"
+      ? stored
+      : "dark"
   })
 
   useEffect(() => {
@@ -32,7 +34,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }
 
   function toggleTheme() {
-    setTheme(theme === "dark" ? "light" : "dark")
+    if (theme === "dark") {
+      setTheme("light")
+      return
+    }
+    if (theme === "light") {
+      setTheme("fancy")
+      return
+    }
+    setTheme("dark")
   }
 
   return (

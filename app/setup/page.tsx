@@ -8,6 +8,7 @@ import {
   DEFAULT_CATEGORY_IDS,
   CategoryTemplate,
 } from "@/lib/constants"
+import { getAutoEndDate } from "@/lib/date-utils"
 import { Budget, BudgetPeriod, Category } from "@/lib/types"
 import StepAmount from "@/components/setup/step-amount"
 import StepCategories from "@/components/setup/step-categories"
@@ -68,6 +69,9 @@ export default function SetupPage() {
   }
 
   function handleComplete() {
+    const resolvedEndDate =
+      period === "termly" ? endDate : getAutoEndDate(period, startDate)
+
     const allAvailable = [...ALL_CATEGORIES, ...customCategories]
     const categories: Category[] = selectedIds
       .map((id) => {
@@ -88,7 +92,7 @@ export default function SetupPage() {
       totalAmount: parseFloat(amount),
       period,
       startDate,
-      endDate,
+      endDate: resolvedEndDate,
       categories,
     }
 

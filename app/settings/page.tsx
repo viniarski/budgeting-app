@@ -5,11 +5,20 @@ import { useRouter } from "next/navigation"
 import { useBudget } from "@/contexts/budget-context"
 import { useTheme } from "@/contexts/theme-context"
 import { ALL_CATEGORIES, CategoryTemplate } from "@/lib/constants"
+import { getAutoEndDate } from "@/lib/date-utils"
 import { formatCurrency } from "@/lib/budget-utils"
 import { Budget, BudgetPeriod, Category } from "@/lib/types"
 import StepAmount from "@/components/setup/step-amount"
 import StepCategories from "@/components/setup/step-categories"
-import { Loader2, RotateCcw, Pencil, Wallet, Sun, Moon } from "lucide-react"
+import {
+  Loader2,
+  RotateCcw,
+  Pencil,
+  Wallet,
+  Sun,
+  Moon,
+  Sparkles,
+} from "lucide-react"
 
 const PERIOD_LABELS: Record<BudgetPeriod, string> = {
   weekly: "Weekly",
@@ -20,7 +29,7 @@ const PERIOD_LABELS: Record<BudgetPeriod, string> = {
 export default function SettingsPage() {
   const router = useRouter()
   const { state, dispatch, isHydrated } = useBudget()
-  const { theme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [isEditing, setIsEditing] = useState(false)
   const [editStep, setEditStep] = useState(1)
 
@@ -112,6 +121,9 @@ export default function SettingsPage() {
   }
 
   function handleSave() {
+    const resolvedEndDate =
+      period === "termly" ? endDate : getAutoEndDate(period, startDate)
+
     const allAvailable = [...ALL_CATEGORIES, ...customCategories]
     const categories: Category[] = selectedIds
       .map((id) => {
@@ -132,7 +144,7 @@ export default function SettingsPage() {
       totalAmount: parseFloat(amount),
       period,
       startDate,
-      endDate,
+      endDate: resolvedEndDate,
       categories,
     }
 
@@ -195,38 +207,41 @@ export default function SettingsPage() {
 
       <div className="rounded-xl border border-border bg-card p-4">
         <h2 className="mb-3 font-semibold">Appearance</h2>
-        <button
-          onClick={toggleTheme}
-          className="flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:border-accent/50"
-        >
-          <span className="text-muted">Theme</span>
-          <span className="flex items-center gap-2">
-            {theme === "light" ? (
-              <>
-                <Sun className="h-4 w-4 text-accent" />
-                <span>Light</span>
-              </>
-            ) : (
-              <>
-                <Moon className="h-4 w-4 text-accent" />
-                <span>Dark</span>
-              </>
-            )}
-            <span
-              className={`relative h-6 w-11 rounded-full border transition-colors ${
-                theme === "light"
-                  ? "border-accent bg-accent/20"
-                  : "border-border bg-card"
-              }`}
-            >
-              <span
-                className={`absolute top-1 h-4 w-4 rounded-full bg-accent transition-all ${
-                  theme === "light" ? "left-6" : "left-1"
-                }`}
-              />
-            </span>
-          </span>
-        </button>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => setTheme("dark")}
+            className={`flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm transition-colors ${
+              theme === "dark"
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border bg-background text-muted hover:border-accent/40"
+            }`}
+          >
+            <Moon className="h-4 w-4" />
+            Dark
+          </button>
+          <button
+            onClick={() => setTheme("light")}
+            className={`flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm transition-colors ${
+              theme === "light"
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border bg-background text-muted hover:border-accent/40"
+            }`}
+          >
+            <Sun className="h-4 w-4" />
+            Light
+          </button>
+          <button
+            onClick={() => setTheme("fancy")}
+            className={`flex items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm transition-colors ${
+              theme === "fancy"
+                ? "border-accent bg-accent/10 text-accent"
+                : "border-border bg-background text-muted hover:border-accent/40"
+            }`}
+          >
+            <Sparkles className="h-4 w-4" />
+            Fancy
+          </button>
+        </div>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">

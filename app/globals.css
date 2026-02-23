@@ -18,6 +18,15 @@
   --muted: #64748b;
 }
 
+[data-theme="fancy"] {
+  --background: #0f1026;
+  --foreground: #f5f1ff;
+  --accent: #ff7a59;
+  --card: #191b3a;
+  --border: #323569;
+  --muted: #aaa3c7;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

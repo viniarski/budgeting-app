@@ -1,6 +1,7 @@
 "use client"
 
 import { BudgetPeriod } from "@/lib/types"
+import { getAutoEndDate } from "@/lib/date-utils"
 import {
   CalendarDays,
   PoundSterling,
@@ -53,8 +54,14 @@ export default function StepAmount({
   onEndDateChange,
   onNext,
 }: StepAmountProps) {
+  const isTermly = period === "termly"
+  const effectiveEndDate = isTermly ? endDate : getAutoEndDate(period, startDate)
   const isValid =
-    amount && parseFloat(amount) > 0 && startDate && endDate && endDate > startDate
+    amount &&
+    parseFloat(amount) > 0 &&
+    startDate &&
+    effectiveEndDate &&
+    effectiveEndDate > startDate
 
   return (
     <div className="space-y-6">
@@ -134,14 +141,20 @@ export default function StepAmount({
         <div>
           <label className="mb-1.5 block text-sm text-muted">
             <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
-            End Date
+            End Date {isTermly ? "" : "(auto)"}
           </label>
           <input
             type="date"
-            value={endDate}
+            value={effectiveEndDate}
             onChange={(e) => onEndDateChange(e.target.value)}
-            className="w-full rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+            disabled={!isTermly}
+            className="w-full rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
           />
+          {!isTermly && (
+            <p className="mt-1 text-[11px] text-muted">
+              Calculated automatically from your start date.
+            </p>
+          )}
         </div>
       </div>
 

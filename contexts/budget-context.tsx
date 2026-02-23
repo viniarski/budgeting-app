@@ -44,6 +44,10 @@ const initialState: BudgetState = {
   isOnboarded: false,
 }
 
+function hasMeaningfulState(state: BudgetState): boolean {
+  return state.isOnboarded || state.budget !== null || state.expenses.length > 0
+}
+
 interface BudgetContextValue {
   state: BudgetState
   dispatch: React.Dispatch<Action>
@@ -56,19 +60,62 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const [isHydrated, setIsHydrated] = useState(false)
 
-  // Hydrate from localStorage on mount
+  // Hydrate from localStorage first, then use DB state if available.
   useEffect(() => {
-    const saved = loadState()
-    if (saved.isOnboarded) {
-      dispatch({ type: "HYDRATE", payload: saved })
+    let cancelled = false
+
+    async function hydrate() {
+      const local = loadState()
+      let nextState = local
+
+      try {
+        const response = await fetch("/api/state", { cache: "no-store" })
+        if (response.ok) {
+          const data = (await response.json()) as { state?: BudgetState | null }
+          if (data.state && hasMeaningfulState(data.state)) {
+            nextState = data.state
+            saveState(data.state)
+          }
+        }
+      } catch {
+        // If DB is unavailable, keep local state only.
+      }
+
+      if (!cancelled) {
+        if (hasMeaningfulState(nextState)) {
+          dispatch({ type: "HYDRATE", payload: nextState })
+        }
+        setIsHydrated(true)
+      }
     }
-    setIsHydrated(true)
+
+    void hydrate()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  // Persist to localStorage only after hydration
+  // Persist to localStorage and sync to DB after hydration.
   useEffect(() => {
-    if (isHydrated) {
-      saveState(state)
+    if (!isHydrated) return
+
+    saveState(state)
+
+    const controller = new AbortController()
+    const timer = setTimeout(() => {
+      void fetch("/api/state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ state }),
+        signal: controller.signal,
+      }).catch(() => {
+        // Silent fallback to localStorage-only mode.
+      })
+    }, 250)
+
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
     }
   }, [state, isHydrated])
 
