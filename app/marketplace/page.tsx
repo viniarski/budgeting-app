@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import {
   Tag,
   UtensilsCrossed,
@@ -138,8 +139,22 @@ export default function OffersPage() {
                 rel={offer.url ? "noopener noreferrer" : undefined}
                 className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 transition-colors hover:border-accent/30"
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                  <Icon className="h-5 w-5 text-accent" />
+                <div
+                  className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${
+                    offer.logoPath ? "bg-white" : "bg-accent/10"
+                  }`}
+                >
+                  {offer.logoPath ? (
+                    <Image
+                      src={offer.logoPath}
+                      alt={`${offer.name} logo`}
+                      width={40}
+                      height={40}
+                      className="h-8 w-8 rounded object-contain"
+                    />
+                  ) : (
+                    <Icon className="h-5 w-5 text-accent" />
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium">{offer.name}</p>

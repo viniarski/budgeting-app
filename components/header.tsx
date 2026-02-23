@@ -14,7 +14,6 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { useBudget } from "@/contexts/budget-context"
-import LogoMark from "@/components/logo-mark"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -28,12 +27,22 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md md:left-56">
+      <header className="desktop-header fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4 md:h-16 md:max-w-none md:px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <LogoMark
-              className="h-16 w-16"
-              style={{ color: "var(--logo)" }}
+            <span
+              className="inline-block h-16 w-16 bg-current"
+              style={{
+                color: "var(--logo)",
+                maskImage: "url('/logo.svg')",
+                WebkitMaskImage: "url('/logo.svg')",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+                maskPosition: "center",
+                WebkitMaskPosition: "center",
+                maskSize: "contain",
+                WebkitMaskSize: "contain",
+              }}
               aria-hidden
             />
             <span className="text-base font-bold">UniWallet</span>

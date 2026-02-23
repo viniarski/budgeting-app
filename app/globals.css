@@ -68,3 +68,32 @@ input[type="number"] {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+@media (min-width: 768px) {
+  .desktop-header {
+    left: 14rem;
+    transition: left 180ms ease;
+  }
+
+  .desktop-main {
+    margin-left: 14rem;
+    transition: margin-left 180ms ease;
+  }
+
+  .desktop-sidebar {
+    transform: translateX(0);
+    transition: transform 180ms ease;
+  }
+
+  body[data-sidebar="hidden"] .desktop-header {
+    left: 0;
+  }
+
+  body[data-sidebar="hidden"] .desktop-main {
+    margin-left: 0;
+  }
+
+  body[data-sidebar="hidden"] .desktop-sidebar {
+    transform: translateX(-100%);
+  }
+}

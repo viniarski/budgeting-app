@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { BudgetProvider } from "@/contexts/budget-context"
 import { ThemeProvider } from "@/contexts/theme-context"
+import { SidebarProvider } from "@/contexts/sidebar-context"
 import Header from "@/components/header"
 import BottomNav from "@/components/bottom-nav"
 
@@ -39,13 +40,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
         <ThemeProvider>
-          <BudgetProvider>
-            <Header />
-            <main className="mx-auto max-w-md px-4 pb-24 pt-18 md:ml-56 md:mr-6 md:max-w-none md:px-6 md:pb-8 md:pt-22">
-              {children}
-            </main>
-            <BottomNav />
-          </BudgetProvider>
+          <SidebarProvider>
+            <BudgetProvider>
+              <Header />
+              <main className="desktop-main mx-auto max-w-md px-4 pb-24 pt-18 md:mr-6 md:max-w-none md:px-6 md:pb-8 md:pt-22">
+                {children}
+              </main>
+              <BottomNav />
+            </BudgetProvider>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

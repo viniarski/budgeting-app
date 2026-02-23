@@ -13,6 +13,7 @@ export interface OfferItem {
   desc: string
   discount: string
   category: Exclude<OfferCategory, "all">
+  logoPath?: string
   url?: string
 }
 
@@ -27,6 +28,33 @@ export const OFFER_FILTERS: { value: OfferCategory; label: string }[] = [
 ]
 
 export const DEFAULT_OFFERS: OfferItem[] = [
+  {
+    id: "aviva-student-contents",
+    name: "Aviva Student Contents Insurance",
+    desc: "Protect laptop, phone, and essentials in halls or shared housing",
+    discount: "Student pricing",
+    category: "health",
+    logoPath: "/aviva-logo.svg",
+    url: "https://www.aviva.co.uk/",
+  },
+  {
+    id: "aviva-student-travel",
+    name: "Aviva Student Travel Cover",
+    desc: "Flexible single-trip cover for study breaks and holidays",
+    discount: "Up to 15%",
+    category: "travel",
+    logoPath: "/aviva-logo.svg",
+    url: "https://www.aviva.co.uk/",
+  },
+  {
+    id: "aviva-gadget-cover",
+    name: "Aviva Gadget Cover",
+    desc: "Optional cover for phones and tablets on student budgets",
+    discount: "Bundle savings",
+    category: "tech",
+    logoPath: "/aviva-logo.svg",
+    url: "https://www.aviva.co.uk/",
+  },
   {
     id: "amazon-prime-student",
     name: "Amazon Prime Student",
