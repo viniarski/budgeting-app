@@ -125,7 +125,7 @@ export default function StepAmount({
       </div>
 
       {/* Dates */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <label className="mb-1.5 block text-sm text-muted">
             <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
