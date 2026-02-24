@@ -45,14 +45,14 @@ export default function DateField({
   const selected = useMemo(() => parseIsoDate(value), [value])
 
   return (
-    <div className="w-full min-w-0">
+    <div className="w-full max-w-full min-w-0 overflow-hidden">
       <button
         type="button"
         aria-label={ariaLabel}
         data-value={value}
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full min-w-0 items-center justify-between rounded-xl border border-border bg-card px-3 py-3 text-left text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
+        className="flex w-full max-w-full min-w-0 items-center justify-between overflow-hidden rounded-xl border border-border bg-card px-3 py-3 text-left text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
       >
         <span className="truncate">{formatLabel(value)}</span>
         <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-muted" />

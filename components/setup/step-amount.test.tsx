@@ -17,9 +17,9 @@ describe("StepAmount", () => {
       />
     )
 
-    const allDateInputs = document.querySelectorAll('input[type="date"]')
-    expect((allDateInputs[1] as HTMLInputElement).disabled).toBe(true)
-    expect((allDateInputs[1] as HTMLInputElement).value).toBe("2026-02-28")
+    const endDateButton = screen.getByRole("button", { name: "End Date" })
+    expect(endDateButton).toBeDisabled()
+    expect(endDateButton).toHaveAttribute("data-value", "2026-02-28")
   })
 
   it("calls onPeriodChange when period button is clicked", () => {

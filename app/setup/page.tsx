@@ -101,7 +101,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] flex-col justify-center">
+    <div className="flex min-h-[80vh] w-full min-w-0 flex-col justify-center overflow-x-hidden">
       <div className="mb-8 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white">
           <Wallet className="h-6 w-6" />
