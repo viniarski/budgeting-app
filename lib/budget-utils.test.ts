@@ -10,6 +10,7 @@ import {
   formatCurrency,
 } from "@/lib/budget-utils"
 import { Budget, Expense } from "@/lib/types"
+import { vi } from "vitest"
 
 const budget: Budget = {
   id: "budget-1",
@@ -46,6 +47,15 @@ const expenses: Expense[] = [
 ]
 
 describe("budget-utils", () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date("2026-02-10T12:00:00.000Z"))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it("calculates total spent", () => {
     expect(calculateSpent(expenses)).toBe(175)
   })
@@ -54,16 +64,24 @@ describe("budget-utils", () => {
     expect(calculateRemaining(budget, expenses)).toBe(825)
   })
 
-  it("calculates daily allowance when days remain", () => {
+  it("calculates daily allowance with deterministic days remaining", () => {
     const result = calculateDailyAllowance(
-      { ...budget, endDate: "2099-12-31" },
+      { ...budget, endDate: "2026-02-20" },
       expenses
     )
-    expect(result).toBeGreaterThan(0)
+    expect(result).toBeCloseTo(82.5, 3)
   })
 
   it("returns zero days remaining for past end date", () => {
     expect(getDaysRemaining("2000-01-01")).toBe(0)
+  })
+
+  it("returns zero daily allowance when budget period is over", () => {
+    const result = calculateDailyAllowance(
+      { ...budget, endDate: "2026-01-01" },
+      expenses
+    )
+    expect(result).toBe(0)
   })
 
   it("calculates category spend by id", () => {
@@ -73,8 +91,14 @@ describe("budget-utils", () => {
 
   it("handles percentages, progress colors, and currency formatting", () => {
     expect(getSpentPercentage(120, 100)).toBe(100)
+    expect(getSpentPercentage(10, 0)).toBe(0)
     expect(getProgressColour(90)).toBe("text-danger")
+    expect(getProgressColour(60)).toBe("text-warning")
+    expect(getProgressColour(59.9)).toBe("text-success")
     expect(getProgressBarColour(65)).toBe("bg-warning")
+    expect(getProgressBarColour(85)).toBe("bg-danger")
+    expect(getProgressBarColour(20)).toBe("bg-success")
     expect(formatCurrency(12.5)).toBe("£12.50")
+    expect(formatCurrency(0)).toBe("£0.00")
   })
 })
