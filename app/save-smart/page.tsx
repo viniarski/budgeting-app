@@ -190,11 +190,15 @@ export default function SaveSmartPage() {
     )
   }
 
+  const topSuggestions = suggestions.slice(0, 3)
+
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-heading text-xl font-bold">Save Smart</h1>
-        <p className="text-sm text-muted">
+        <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
+          Save Smart
+        </h1>
+        <p className="text-center text-sm text-muted">
           AI-powered savings guidance based on your spending
         </p>
       </div>
@@ -232,7 +236,7 @@ export default function SaveSmartPage() {
           <h2 className="text-sm font-semibold">Recommended Moves</h2>
         </div>
         <ul className="space-y-2">
-          {suggestions.map((tip) => (
+          {topSuggestions.map((tip) => (
             <li
               key={tip}
               className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"

@@ -10,6 +10,12 @@ function parseLocalDate(date: string): Date {
   return new Date(`${date}T12:00:00`)
 }
 
+const PERIOD_LABELS = {
+  weekly: "Weekly",
+  monthly: "Monthly",
+  termly: "Termly",
+} as const
+
 export default function TrackSpendPage() {
   const router = useRouter()
   const { state, isHydrated } = useBudget()
@@ -86,10 +92,62 @@ export default function TrackSpendPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-heading text-xl font-bold">Track Spend</h1>
-        <p className="text-sm text-muted">
+        <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
+          Track Spend
+        </h1>
+        <p className="text-center text-sm text-muted">
           Charts and spending patterns from your budget
         </p>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h2 className="mb-3 font-semibold">Budget Details</h2>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span className="text-muted">Period</span>
+            <span className="font-medium">
+              {PERIOD_LABELS[budget.period ?? "termly"]}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Budget Amount</span>
+            <span className="font-medium">{formatCurrency(budget.totalAmount)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Start Date</span>
+            <span className="font-medium">
+              {new Date(budget.startDate).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">End Date</span>
+            <span className="font-medium">
+              {new Date(budget.endDate).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-4">
+        <h2 className="mb-3 font-semibold">Category Allocations</h2>
+        <div className="space-y-2 text-sm">
+          {budget.categories
+            .filter((c) => c.allocated > 0)
+            .map((cat) => (
+              <div key={cat.id} className="flex justify-between">
+                <span className="text-muted">{cat.name}</span>
+                <span className="font-medium">{formatCurrency(cat.allocated)}</span>
+              </div>
+            ))}
+        </div>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
@@ -157,13 +215,18 @@ export default function TrackSpendPage() {
             </div>
           ))}
         </div>
-        <div className="mt-3 space-y-1">
+        <div className="mt-3 border-t border-border pt-3">
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted">
+            Daily Totals
+          </p>
+          <div className="space-y-1">
           {dailyTrend.map((day) => (
             <div key={`${day.label}-value`} className="flex justify-between text-xs">
               <span className="text-muted">{day.label}</span>
               <span>{formatCurrency(day.amount)}</span>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </div>

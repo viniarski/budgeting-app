@@ -8,7 +8,6 @@ import { useBudget } from "@/contexts/budget-context"
 import { useTheme } from "@/contexts/theme-context"
 import { ALL_CATEGORIES, CategoryTemplate } from "@/lib/constants"
 import { getAutoEndDate } from "@/lib/date-utils"
-import { formatCurrency } from "@/lib/budget-utils"
 import { Budget, BudgetPeriod, Category } from "@/lib/types"
 import StepAmount from "@/components/setup/step-amount"
 import StepCategories from "@/components/setup/step-categories"
@@ -23,12 +22,6 @@ import {
   QrCode,
   ExternalLink,
 } from "lucide-react"
-
-const PERIOD_LABELS: Record<BudgetPeriod, string> = {
-  weekly: "Weekly",
-  monthly: "Monthly",
-  termly: "Termly",
-}
 
 const APP_URL = "https://budgeting-app-eight-amber.vercel.app/"
 
@@ -276,8 +269,8 @@ export default function SettingsPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold">Budget Details</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold">Budget</h2>
           {budget && (
             <button
               onClick={startEditing}
@@ -289,42 +282,11 @@ export default function SettingsPage() {
           )}
         </div>
         {budget ? (
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted">Period</span>
-              <span className="font-medium">
-                {PERIOD_LABELS[budget.period ?? "termly"]}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">Budget Amount</span>
-              <span className="font-medium">
-                {formatCurrency(budget.totalAmount)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">Start Date</span>
-              <span className="font-medium">
-                {new Date(budget.startDate).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">End Date</span>
-              <span className="font-medium">
-                {new Date(budget.endDate).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
-            </div>
-          </div>
+          <p className="mt-2 text-sm text-muted">
+            Budget details and category allocations are now shown in Track Spend.
+          </p>
         ) : (
-          <div className="space-y-3">
+          <div className="mt-2 space-y-3">
             <p className="text-sm text-muted">
               No budget set up yet. You can still configure app appearance here.
             </p>
@@ -337,24 +299,6 @@ export default function SettingsPage() {
           </div>
         )}
       </div>
-
-      {budget && (
-        <div className="rounded-xl border border-border bg-card p-4">
-          <h2 className="mb-3 font-semibold">Category Allocations</h2>
-          <div className="space-y-2 text-sm">
-            {budget.categories
-              .filter((c) => c.allocated > 0)
-              .map((cat) => (
-                <div key={cat.id} className="flex justify-between">
-                  <span className="text-muted">{cat.name}</span>
-                  <span className="font-medium">
-                    {formatCurrency(cat.allocated)}
-                  </span>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
 
       {budget && (
         <button

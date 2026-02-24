@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getProgressColour } from "@/lib/budget-utils"
 
 interface BudgetRingProps {
   spent: number
@@ -22,14 +21,6 @@ export default function BudgetRing({ spent, total, size = 100 }: BudgetRingProps
   const strokeWidth = 7
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (animatedPercent / 100) * circumference
-  const colour = getProgressColour(percentage)
-
-  const strokeColour =
-    percentage >= 85
-      ? "#ef4444"
-      : percentage >= 60
-        ? "#f59e0b"
-        : "#10b981"
 
   return (
     <div
@@ -42,7 +33,7 @@ export default function BudgetRing({ spent, total, size = 100 }: BudgetRingProps
           cy="50"
           r={radius}
           fill="none"
-          stroke="#262626"
+          stroke="var(--border)"
           strokeWidth={strokeWidth}
         />
         <circle
@@ -50,7 +41,7 @@ export default function BudgetRing({ spent, total, size = 100 }: BudgetRingProps
           cy="50"
           r={radius}
           fill="none"
-          stroke={strokeColour}
+          stroke="var(--accent)"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -59,7 +50,7 @@ export default function BudgetRing({ spent, total, size = 100 }: BudgetRingProps
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={`text-sm font-bold ${colour}`}>
+        <span className="text-sm font-bold text-accent">
           {percentage.toFixed(0)}%
         </span>
         <span className="text-[10px] text-muted">used</span>

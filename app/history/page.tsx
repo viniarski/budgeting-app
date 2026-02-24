@@ -114,7 +114,7 @@ export default function HistoryPage() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as DateFilter)}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none transition-colors focus:border-accent"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2.5 pr-9 text-sm outline-none transition-colors focus:border-accent"
           >
             <option value="all">All time</option>
             <option value="7">Last 7 days</option>

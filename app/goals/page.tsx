@@ -6,6 +6,7 @@ import { useBudget } from "@/contexts/budget-context"
 import { ALL_CATEGORIES } from "@/lib/constants"
 import { formatCurrency } from "@/lib/budget-utils"
 import { Budget } from "@/lib/types"
+import * as Icons from "lucide-react"
 import { Check, Loader2, Plus, X } from "lucide-react"
 
 const DEFAULT_GOAL_IDS = ["rent", "food", "subscriptions", "media", "transport"]
@@ -31,11 +32,14 @@ export default function GoalsPage() {
 
   return (
     <GoalsEditor
-      key={budget.id}
+      key={`${budget.id}-${budget.categories
+        .map((c) => `${c.id}:${c.allocated}`)
+        .join("|")}`}
       budget={budget}
       onSave={(categories) =>
         dispatch({ type: "SET_BUDGET", payload: { ...budget, categories } })
       }
+      onSaved={() => router.push("/")}
     />
   )
 }
@@ -43,9 +47,11 @@ export default function GoalsPage() {
 function GoalsEditor({
   budget,
   onSave,
+  onSaved,
 }: {
   budget: Budget
   onSave: (categories: Budget["categories"]) => void
+  onSaved: () => void
 }) {
   const existing = budget.categories.filter((c) => c.allocated > 0).map((c) => c.id)
   const initialIds = Array.from(new Set([...DEFAULT_GOAL_IDS, ...existing]))
@@ -113,7 +119,7 @@ function GoalsEditor({
     const nextCategories = budget.categories.map((cat) =>
       selectedIds.includes(cat.id)
         ? { ...cat, allocated: allocations[cat.id] || 0 }
-        : cat
+        : { ...cat, allocated: 0 }
     )
 
     selectedIds.forEach((id) => {
@@ -128,6 +134,7 @@ function GoalsEditor({
 
     onSave(nextCategories)
     setSaved(true)
+    setTimeout(() => onSaved(), 500)
   }
 
   return (
@@ -166,6 +173,9 @@ function GoalsEditor({
             key={category.id}
             className="flex items-center gap-2 rounded-xl border border-border bg-card p-3"
           >
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent">
+              <Icons.Shapes className="h-4 w-4" />
+            </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{category.name}</p>
             </div>
@@ -194,18 +204,23 @@ function GoalsEditor({
 
       {addableCategories.length > 0 && (
         <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-3">
-          <select
-            value={addId}
-            onChange={(e) => setAddId(e.target.value)}
-            className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-accent"
-          >
-            <option value="">Add category...</option>
-            {addableCategories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
+          <div className="relative flex-1">
+            <select
+              value={addId}
+              onChange={(e) => setAddId(e.target.value)}
+              className="w-full appearance-none rounded-lg border border-border bg-background px-3 py-2 pr-10 text-sm outline-none transition-colors focus:border-accent"
+            >
+              <option value="" disabled hidden>
+                Add category...
               </option>
-            ))}
-          </select>
+              {addableCategories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            <Icons.ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          </div>
           <button
             onClick={handleAddCategory}
             disabled={!addId}

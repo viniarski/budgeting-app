@@ -44,6 +44,17 @@ const initialState: BudgetState = {
   isOnboarded: false,
 }
 
+const STATE_CLIENT_ID_KEY = "uniwallet-state-id"
+
+function getStateId(): string {
+  if (typeof window === "undefined") return "default"
+  const existing = localStorage.getItem(STATE_CLIENT_ID_KEY)
+  if (existing) return existing
+  const generated = crypto.randomUUID()
+  localStorage.setItem(STATE_CLIENT_ID_KEY, generated)
+  return generated
+}
+
 function hasMeaningfulState(state: BudgetState): boolean {
   return state.isOnboarded || state.budget !== null || state.expenses.length > 0
 }
@@ -67,9 +78,12 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
     async function hydrate() {
       const local = loadState()
       let nextState = local
+      const stateId = getStateId()
 
       try {
-        const response = await fetch("/api/state", { cache: "no-store" })
+        const response = await fetch(`/api/state?stateId=${encodeURIComponent(stateId)}`, {
+          cache: "no-store",
+        })
         if (response.ok) {
           const data = (await response.json()) as { state?: BudgetState | null }
           if (data.state && hasMeaningfulState(data.state)) {
@@ -102,8 +116,9 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
     saveState(state)
 
     const controller = new AbortController()
+    const stateId = getStateId()
     const timer = setTimeout(() => {
-      void fetch("/api/state", {
+      void fetch(`/api/state?stateId=${encodeURIComponent(stateId)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ state }),

@@ -50,7 +50,7 @@ export default function Header() {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-card"
+            className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-card md:hidden"
           >
             {menuOpen ? (
               <X className="h-5 w-5 text-foreground" />
@@ -64,14 +64,14 @@ export default function Header() {
       {/* Overlay */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50"
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
 
       {/* Slide-out menu */}
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-72 border-l border-border bg-background transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-72 border-l border-border bg-background transition-transform duration-300 md:hidden ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -152,10 +152,10 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/"
+              href="/profile"
               onClick={() => setMenuOpen(false)}
               className={`flex items-center justify-between rounded-xl px-3 py-3 text-sm transition-colors ${
-                pathname === "/"
+                pathname === "/profile"
                   ? "bg-accent/10 text-accent"
                   : "text-foreground hover:bg-card"
               }`}

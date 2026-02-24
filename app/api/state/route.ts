@@ -4,7 +4,11 @@ import { query } from "@/lib/db"
 
 export const runtime = "nodejs"
 
-const STATE_ID = "default"
+function getStateIdFromUrl(request: Request): string {
+  const { searchParams } = new URL(request.url)
+  const stateId = searchParams.get("stateId")?.trim()
+  return stateId && stateId.length > 0 ? stateId : "default"
+}
 
 async function ensureStateTable() {
   await query(
@@ -29,13 +33,14 @@ function isBudgetState(value: unknown): value is BudgetState {
   )
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await ensureStateTable()
+    const stateId = getStateIdFromUrl(request)
 
     const rows = await query<{ state: BudgetState }>(
       "SELECT state FROM app_states WHERE id = $1 LIMIT 1",
-      [STATE_ID]
+      [stateId]
     )
 
     if (!rows[0]) {
@@ -51,6 +56,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     await ensureStateTable()
+    const stateId = getStateIdFromUrl(request)
 
     const body = (await request.json()) as { state?: unknown }
     if (!isBudgetState(body.state)) {
@@ -64,7 +70,7 @@ export async function POST(request: Request) {
       ON CONFLICT (id)
       DO UPDATE SET state = EXCLUDED.state, updated_at = now()
       `,
-      [STATE_ID, JSON.stringify(body.state)]
+      [stateId, JSON.stringify(body.state)]
     )
 
     return NextResponse.json({ ok: true }, { status: 200 })

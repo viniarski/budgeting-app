@@ -156,7 +156,7 @@ export default function DashboardPage() {
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <CalendarClock className="mx-auto mb-1 h-4 w-4 text-accent" />
           <p className="text-xs text-muted">Days Left</p>
-          <p className="text-sm font-bold">{daysRemaining}</p>
+          <p className="text-sm font-bold text-accent">{daysRemaining}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <TrendingDown className="mx-auto mb-1 h-4 w-4 text-accent" />
