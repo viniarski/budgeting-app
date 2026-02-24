@@ -135,7 +135,7 @@ export default function StepAmount({
             type="date"
             value={startDate}
             onChange={(e) => onStartDateChange(e.target.value)}
-            className="w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+            className="block w-full max-w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
           />
         </div>
         <div className="min-w-0">
@@ -148,7 +148,7 @@ export default function StepAmount({
             value={effectiveEndDate}
             onChange={(e) => onEndDateChange(e.target.value)}
             disabled={!isTermly}
-            className="w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
+            className="block w-full max-w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
           />
           {!isTermly && (
             <p className="mt-1 text-[11px] text-muted">

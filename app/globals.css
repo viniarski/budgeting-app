@@ -64,6 +64,10 @@ body {
 
 /* Render native form controls (date-picker icon, etc.) for dark mode */
 input[type="date"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   color-scheme: dark;
 }
 [data-theme="light"] input[type="date"] {
