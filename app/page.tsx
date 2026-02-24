@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { useBudget } from "@/contexts/budget-context"
+import { motion } from "framer-motion"
 import {
   calculateSpent,
   calculateDailyAllowance,
@@ -25,6 +26,7 @@ import {
   Loader2,
   Search,
 } from "lucide-react"
+import { useIsMobile } from "@/lib/use-is-mobile"
 
 function WelcomeDashboard() {
   return (
@@ -103,6 +105,7 @@ export default function DashboardPage() {
   const { state, isHydrated } = useBudget()
   const { budget, expenses, isOnboarded } = state
   const [categoryQuery, setCategoryQuery] = useState("")
+  const isMobile = useIsMobile()
   const allocatedCategories = budget?.categories.filter((c) => c.allocated > 0) ?? []
   const visibleCategories = useMemo(() => {
     const normalized = categoryQuery.trim().toLowerCase()
@@ -124,6 +127,14 @@ export default function DashboardPage() {
     return <WelcomeDashboard />
   }
 
+  const introMotion = isMobile
+    ? { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.2 } }
+    : { initial: false, animate: false }
+
+  const sectionMotion = isMobile
+    ? { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.24 } }
+    : { initial: false, animate: false }
+
   const totalSpent = calculateSpent(expenses)
   const dailyAllowance = calculateDailyAllowance(budget, expenses)
   const daysRemaining = getDaysRemaining(budget.endDate)
@@ -134,14 +145,18 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      <motion.div {...introMotion}>
         <p className="text-center text-xs text-muted">Good {getGreeting()}</p>
         <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
           {budget.name}
         </h1>
-      </div>
+      </motion.div>
 
-      <div className="rounded-2xl border border-border bg-card p-5">
+      <motion.div
+        {...sectionMotion}
+        transition={isMobile ? { duration: 0.24, delay: 0.03 } : undefined}
+        className="rounded-2xl border border-border bg-card p-5"
+      >
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs text-muted">Total Remaining</p>
@@ -154,9 +169,13 @@ export default function DashboardPage() {
           </div>
           <BudgetRing spent={totalSpent} total={budget.totalAmount} />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <motion.div
+        {...sectionMotion}
+        transition={isMobile ? { duration: 0.24, delay: 0.06 } : undefined}
+        className="grid grid-cols-3 gap-3"
+      >
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <Wallet className="mx-auto mb-1 h-4 w-4 text-accent" />
           <p className="text-xs text-muted">Daily</p>
@@ -176,9 +195,12 @@ export default function DashboardPage() {
             {formatCurrency(totalSpent)}
           </p>
         </div>
-      </div>
+      </motion.div>
 
-      <div>
+      <motion.div
+        {...sectionMotion}
+        transition={isMobile ? { duration: 0.24, delay: 0.09 } : undefined}
+      >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-muted">Recent Expenses</h2>
           {expenses.length > 0 && (
@@ -214,9 +236,12 @@ export default function DashboardPage() {
             <span className="text-sm">Add your first expense</span>
           </Link>
         )}
-      </div>
+      </motion.div>
 
-      <div>
+      <motion.div
+        {...sectionMotion}
+        transition={isMobile ? { duration: 0.24, delay: 0.12 } : undefined}
+      >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-muted">Categories</h2>
           <Link href="/goals" className="text-xs text-accent hover:underline">
@@ -245,7 +270,7 @@ export default function DashboardPage() {
               />
             ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
