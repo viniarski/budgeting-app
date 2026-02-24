@@ -75,7 +75,7 @@ export default function StepAmount({
       {/* Period selector */}
       <div>
         <label className="mb-2 block text-sm text-muted">Budget Period</label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2 min-[420px]:grid-cols-3">
           {periods.map((p) => {
             const isSelected = period === p.value
             const Icon = p.icon
@@ -125,8 +125,8 @@ export default function StepAmount({
       </div>
 
       {/* Dates */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="min-w-0">
           <label className="mb-1.5 block text-sm text-muted">
             <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
             Start Date
@@ -135,10 +135,10 @@ export default function StepAmount({
             type="date"
             value={startDate}
             onChange={(e) => onStartDateChange(e.target.value)}
-            className="w-full rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+            className="w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="mb-1.5 block text-sm text-muted">
             <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
             End Date {isTermly ? "" : "(auto)"}
@@ -148,7 +148,7 @@ export default function StepAmount({
             value={effectiveEndDate}
             onChange={(e) => onEndDateChange(e.target.value)}
             disabled={!isTermly}
-            className="w-full rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full min-w-0 rounded-xl border border-border bg-card px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent disabled:cursor-not-allowed disabled:opacity-70"
           />
           {!isTermly && (
             <p className="mt-1 text-[11px] text-muted">
