@@ -7,6 +7,8 @@ import {
   Plus,
   Calculator,
   Tag,
+  User,
+  Settings,
   PiggyBank,
   ChartColumn,
   ChevronLeft,
@@ -19,6 +21,8 @@ const tabs = [
   { href: "/add", label: "Add", icon: Plus },
   { href: "/calculator", label: "Calculator", icon: Calculator },
   { href: "/marketplace", label: "Offers", icon: Tag },
+  { href: "/profile", label: "Profile", icon: User, desktopOnly: true },
+  { href: "/settings", label: "Settings", icon: Settings, desktopOnly: true },
   { href: "/save-smart", label: "Save Smart", icon: PiggyBank, desktopOnly: true },
   { href: "/track-spend", label: "Track Spend", icon: ChartColumn, desktopOnly: true },
 ]
@@ -31,7 +35,6 @@ export default function BottomNav() {
     "/categories",
     "/history",
     "/goals",
-    "/settings",
     "/setup",
   ]
 
