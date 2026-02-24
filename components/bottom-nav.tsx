@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import type { ComponentType } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import type { ComponentType } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Plus,
@@ -14,64 +14,64 @@ import {
   ChartColumn,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react"
-import { useSidebar } from "@/contexts/sidebar-context"
+} from "lucide-react";
+import { useSidebar } from "@/contexts/sidebar-context";
 
 type NavTab = {
-  href: string
-  label: string
-  icon: ComponentType<{ className?: string }>
-  desktopOnly?: boolean
-}
+  href: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  desktopOnly?: boolean;
+};
 
 const primaryTabs: NavTab[] = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/add", label: "Add", icon: Plus },
   { href: "/calculator", label: "Calculator", icon: Calculator },
   { href: "/marketplace", label: "Offers", icon: Tag },
-]
+];
 
 const insightTabs: NavTab[] = [
   { href: "/save-smart", label: "Save Smart", icon: PiggyBank, desktopOnly: true },
   { href: "/track-spend", label: "Track Spend", icon: ChartColumn, desktopOnly: true },
-]
+];
 
 const accountTabs: NavTab[] = [
   { href: "/profile", label: "Profile", icon: User, desktopOnly: true },
   { href: "/settings", label: "Settings", icon: Settings, desktopOnly: true },
-]
+];
 
 export default function BottomNav() {
-  const pathname = usePathname()
-  const { isSidebarHidden, hideSidebar, showSidebar } = useSidebar()
-  const budgetRoutes = ["/add", "/categories", "/history", "/goals", "/setup"]
+  const pathname = usePathname();
+  const { isSidebarHidden, hideSidebar, showSidebar } = useSidebar();
+  const budgetRoutes = ["/add", "/categories", "/history", "/goals", "/setup"];
 
   function matchesRoute(baseRoute: string): boolean {
-    return pathname === baseRoute || pathname.startsWith(`${baseRoute}/`)
+    return pathname === baseRoute || pathname.startsWith(`${baseRoute}/`);
   }
 
   function isTabActive(href: string): boolean {
     if (href === "/add") {
-      return budgetRoutes.some((route) => matchesRoute(route))
+      return budgetRoutes.some(route => matchesRoute(route));
     }
-    return matchesRoute(href)
+    return matchesRoute(href);
   }
 
   return (
     <nav className="desktop-sidebar fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom md:top-0 md:right-auto md:w-56 md:border-r md:border-t-0 md:bg-card/95 md:backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around md:mx-0 md:h-full md:max-w-none md:flex-col md:items-stretch md:px-3 md:pb-4 md:pt-20">
-        {primaryTabs.map((tab) => (
+        {primaryTabs.map(tab => (
           <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
         ))}
 
         <div className="hidden md:mt-3 md:block md:border-t md:border-border md:pt-3">
-          {insightTabs.map((tab) => (
+          {insightTabs.map(tab => (
             <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
           ))}
         </div>
 
-        <div className="hidden md:mt-auto md:block md:border-t md:border-border md:pt-3">
-          {accountTabs.map((tab) => (
+        <div className="hidden md:block md:border-t md:border-border md:pt-3">
+          {accountTabs.map(tab => (
             <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
           ))}
         </div>
@@ -91,7 +91,7 @@ export default function BottomNav() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
 function NavItem({ tab, isActive }: { tab: NavTab; isActive: boolean }) {
@@ -119,5 +119,5 @@ function NavItem({ tab, isActive }: { tab: NavTab; isActive: boolean }) {
       )}
       <span className="desktop-sidebar-label">{tab.label}</span>
     </Link>
-  )
+  );
 }
