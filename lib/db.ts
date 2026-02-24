@@ -15,6 +15,7 @@ function getPool(): Pool {
   global.__pool = new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 3000,
   })
 
   return global.__pool

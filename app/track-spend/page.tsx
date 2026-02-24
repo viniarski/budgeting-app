@@ -86,7 +86,7 @@ export default function TrackSpendPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold">Track Spend</h1>
+        <h1 className="font-heading text-xl font-bold">Track Spend</h1>
         <p className="text-sm text-muted">
           Charts and spending patterns from your budget
         </p>

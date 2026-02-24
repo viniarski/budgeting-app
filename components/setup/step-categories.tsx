@@ -62,7 +62,7 @@ export default function StepCategories({
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Add Categories</h2>
+            <h2 className="font-heading text-2xl font-bold">Add Categories</h2>
             <p className="mt-1 text-sm text-muted">
               Tap to add or remove categories
             </p>
@@ -159,7 +159,7 @@ export default function StepCategories({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-2xl font-bold">Assign your money</h2>
+        <h2 className="font-heading text-2xl font-bold">Assign your money</h2>
         <p className="mt-1 text-sm text-muted">
           Split {formatCurrency(totalAmount)} across your spending categories.
         </p>
@@ -172,7 +172,7 @@ export default function StepCategories({
           <span
             className={`font-bold ${
               remaining < 0
-                ? "text-red-500"
+                ? "text-danger"
                 : remaining === 0
                   ? "text-accent"
                   : "text-foreground"

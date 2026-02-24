@@ -125,7 +125,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div>
         <p className="text-center text-xs text-muted">Good {getGreeting()}</p>
-        <h1 className="text-center text-xl font-bold uppercase tracking-wide">
+        <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
           {budget.name}
         </h1>
       </div>

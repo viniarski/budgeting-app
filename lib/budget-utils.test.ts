@@ -73,8 +73,8 @@ describe("budget-utils", () => {
 
   it("handles percentages, progress colors, and currency formatting", () => {
     expect(getSpentPercentage(120, 100)).toBe(100)
-    expect(getProgressColour(90)).toBe("text-red-500")
-    expect(getProgressBarColour(65)).toBe("bg-amber-500")
+    expect(getProgressColour(90)).toBe("text-danger")
+    expect(getProgressBarColour(65)).toBe("bg-warning")
     expect(formatCurrency(12.5)).toBe("£12.50")
   })
 })

@@ -8,6 +8,9 @@
   --card: #141414;
   --border: #262626;
   --muted: #737373;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --success: #34d399;
 }
 
 [data-theme="light"] {
@@ -18,6 +21,9 @@
   --card: #ffffff;
   --border: #dbe2ea;
   --muted: #64748b;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --success: #059669;
 }
 
 [data-theme="fancy"] {
@@ -28,6 +34,9 @@
   --card: #191b3a;
   --border: #323569;
   --muted: #aaa3c7;
+  --danger: #ff6b8a;
+  --warning: #ffd43b;
+  --success: #69db7c;
 }
 
 @theme inline {
@@ -37,8 +46,12 @@
   --color-card: var(--card);
   --color-border: var(--border);
   --color-muted: var(--muted);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-bakbak);
 }
 
 body {
@@ -50,6 +63,14 @@ body {
   transition:
     background-color 180ms ease,
     color 180ms ease;
+}
+
+/* Render native form controls (date-picker icon, etc.) for dark mode */
+input[type="date"] {
+  color-scheme: dark;
+}
+[data-theme="light"] input[type="date"] {
+  color-scheme: light;
 }
 
 /* Hide number input spinners */

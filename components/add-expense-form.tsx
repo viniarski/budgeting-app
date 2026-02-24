@@ -41,7 +41,7 @@ export default function AddExpenseForm() {
   if (submitted) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500 text-white">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success text-white">
           <Check className="h-8 w-8" />
         </div>
         <p className="mt-4 text-lg font-semibold">Expense Added!</p>

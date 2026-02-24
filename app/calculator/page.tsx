@@ -128,7 +128,7 @@ export default function CalculatorPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-center text-xl font-bold uppercase tracking-wide">
+        <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
           Budget Calculator
         </h1>
         <p className="text-center text-xs text-muted">
@@ -212,7 +212,7 @@ export default function CalculatorPage() {
             </div>
           ))}
           {needs + wants + savings !== 100 && (
-            <p className="text-xs text-red-500">
+            <p className="text-xs text-danger">
               Total must equal 100% (currently {needs + wants + savings}%)
             </p>
           )}
@@ -224,13 +224,13 @@ export default function CalculatorPage() {
         <>
           {/* Monthly breakdown */}
           <div className="space-y-2">
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+            <div className="rounded-xl border border-success/30 bg-success/5 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-emerald-500" />
+                  <div className="h-3 w-3 rounded-full bg-success" />
                   <span className="text-sm font-medium">Needs</span>
                 </div>
-                <span className="text-lg font-bold text-emerald-500">
+                <span className="text-lg font-bold text-success">
                   {formatCurrency(needsAmount)}
                 </span>
               </div>
@@ -254,13 +254,13 @@ export default function CalculatorPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
+            <div className="rounded-xl border border-warning/30 bg-warning/5 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-amber-500" />
+                  <div className="h-3 w-3 rounded-full bg-warning" />
                   <span className="text-sm font-medium">Savings</span>
                 </div>
-                <span className="text-lg font-bold text-amber-500">
+                <span className="text-lg font-bold text-warning">
                   {formatCurrency(savingsAmount)}
                 </span>
               </div>
@@ -273,7 +273,7 @@ export default function CalculatorPage() {
           {/* Stacked bar */}
           <div className="flex h-4 overflow-hidden rounded-full">
             <div
-              className="bg-emerald-500 transition-all duration-500"
+              className="bg-success transition-all duration-500"
               style={{ width: `${needs}%` }}
             />
             <div
@@ -281,7 +281,7 @@ export default function CalculatorPage() {
               style={{ width: `${wants}%` }}
             />
             <div
-              className="bg-amber-500 transition-all duration-500"
+              className="bg-warning transition-all duration-500"
               style={{ width: `${savings}%` }}
             />
           </div>

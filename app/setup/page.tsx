@@ -107,7 +107,7 @@ export default function SetupPage() {
           <Wallet className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl font-bold">UniWallet</h1>
+          <h1 className="font-heading text-xl font-bold">UniWallet</h1>
           <p className="text-xs text-muted">Step {step} of 2</p>
         </div>
       </div>

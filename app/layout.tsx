@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Bakbak_One } from "next/font/google"
 import "./globals.css"
 import { BudgetProvider } from "@/contexts/budget-context"
 import { ThemeProvider } from "@/contexts/theme-context"
@@ -14,6 +14,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+})
+
+const bakbakOne = Bakbak_One({
+  variable: "--font-bakbak",
+  weight: "400",
   subsets: ["latin"],
 })
 
@@ -37,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bakbakOne.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
         <ThemeProvider>
           <SidebarProvider>

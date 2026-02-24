@@ -45,7 +45,7 @@ export default function Header() {
               }}
               aria-hidden
             />
-            <span className="text-base font-bold">UniWallet</span>
+            <span className="font-heading text-base font-bold">UniWallet</span>
           </Link>
 
           <button

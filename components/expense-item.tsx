@@ -48,7 +48,7 @@ export default function ExpenseItem({
       {onDelete && (
         <button
           onClick={() => onDelete(expense.id)}
-          className="ml-1 text-muted transition-colors hover:text-red-500"
+          className="ml-1 text-muted transition-colors hover:text-danger"
         >
           <Trash2 className="h-4 w-4" />
         </button>

@@ -71,7 +71,7 @@ export default function CategoryCard({
         </div>
         <span
           className={`text-sm font-semibold ${
-            remaining < 0 ? "text-red-500" : "text-foreground"
+            remaining < 0 ? "text-danger" : "text-foreground"
           }`}
         >
           {formatCurrency(remaining)} left

@@ -133,7 +133,7 @@ function GoalsEditor({
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold">Set Goals</h1>
+        <h1 className="font-heading text-xl font-bold">Set Goals</h1>
         <p className="text-sm text-muted">
           Spread {formatCurrency(budget.totalAmount)} across categories
         </p>
@@ -149,7 +149,7 @@ function GoalsEditor({
           <span
             className={`font-semibold ${
               remaining < 0
-                ? "text-red-500"
+                ? "text-danger"
                 : remaining === 0
                   ? "text-accent"
                   : "text-foreground"
@@ -217,7 +217,7 @@ function GoalsEditor({
       )}
 
       {remaining < 0 && (
-        <p className="text-xs text-red-500">
+        <p className="text-xs text-danger">
           You have allocated more than your budget total.
         </p>
       )}

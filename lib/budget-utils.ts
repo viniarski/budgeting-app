@@ -34,15 +34,15 @@ export function getSpentPercentage(spent: number, total: number): number {
 }
 
 export function getProgressColour(percentage: number): string {
-  if (percentage >= 85) return "text-red-500"
-  if (percentage >= 60) return "text-amber-500"
-  return "text-emerald-500"
+  if (percentage >= 85) return "text-danger"
+  if (percentage >= 60) return "text-warning"
+  return "text-success"
 }
 
 export function getProgressBarColour(percentage: number): string {
-  if (percentage >= 85) return "bg-red-500"
-  if (percentage >= 60) return "bg-amber-500"
-  return "bg-emerald-500"
+  if (percentage >= 85) return "bg-danger"
+  if (percentage >= 60) return "bg-warning"
+  return "bg-success"
 }
 
 export function formatCurrency(amount: number): string {

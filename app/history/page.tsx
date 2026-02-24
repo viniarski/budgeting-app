@@ -76,7 +76,7 @@ export default function HistoryPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold">Expense History</h1>
+        <h1 className="font-heading text-xl font-bold">Expense History</h1>
         <p className="text-sm text-muted">Search, filter, and manage spending</p>
       </div>
 

@@ -66,7 +66,7 @@ export default function StepAmount({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Set up your budget</h2>
+        <h2 className="font-heading text-2xl font-bold">Set up your budget</h2>
         <p className="mt-1 text-sm text-muted">
           Choose how you want to budget and set your amount.
         </p>

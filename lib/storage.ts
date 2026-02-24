@@ -1,5 +1,6 @@
 import { BudgetState } from "./types"
 import { STORAGE_KEY } from "./constants"
+import { Listing, DEFAULT_LISTINGS, LISTINGS_STORAGE_KEY } from "./listings"
 
 const DEFAULT_STATE: BudgetState = {
   budget: null,
@@ -30,6 +31,26 @@ export function saveState(state: BudgetState): void {
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  } catch {
+    // localStorage might be full or unavailable
+  }
+}
+
+export function loadListings(): Listing[] {
+  if (typeof window === "undefined") return DEFAULT_LISTINGS
+  try {
+    const raw = localStorage.getItem(LISTINGS_STORAGE_KEY)
+    if (!raw) return DEFAULT_LISTINGS
+    return JSON.parse(raw) as Listing[]
+  } catch {
+    return DEFAULT_LISTINGS
+  }
+}
+
+export function saveListings(listings: Listing[]): void {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.setItem(LISTINGS_STORAGE_KEY, JSON.stringify(listings))
   } catch {
     // localStorage might be full or unavailable
   }

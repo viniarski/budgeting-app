@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import Image from "next/image"
+import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useBudget } from "@/contexts/budget-context"
 import { useTheme } from "@/contexts/theme-context"
@@ -18,6 +20,8 @@ import {
   Sun,
   Moon,
   Sparkles,
+  QrCode,
+  ExternalLink,
 } from "lucide-react"
 
 const PERIOD_LABELS: Record<BudgetPeriod, string> = {
@@ -25,6 +29,8 @@ const PERIOD_LABELS: Record<BudgetPeriod, string> = {
   monthly: "Monthly",
   termly: "Termly",
 }
+
+const APP_URL = "https://budgeting-app-eight-amber.vercel.app/"
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -43,13 +49,7 @@ export default function SettingsPage() {
     []
   )
 
-  useEffect(() => {
-    if (isHydrated && (!state.isOnboarded || !state.budget)) {
-      router.replace("/setup")
-    }
-  }, [isHydrated, state.isOnboarded, state.budget, router])
-
-  if (!isHydrated || !state.isOnboarded || !state.budget) {
+  if (!isHydrated) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-accent" />
@@ -60,6 +60,8 @@ export default function SettingsPage() {
   const budget = state.budget
 
   function startEditing() {
+    if (!budget) return
+
     setAmount(String(budget.totalAmount))
     setPeriod(budget.period ?? "monthly")
     setStartDate(budget.startDate)
@@ -121,6 +123,8 @@ export default function SettingsPage() {
   }
 
   function handleSave() {
+    if (!budget) return
+
     const resolvedEndDate =
       period === "termly" ? endDate : getAutoEndDate(period, startDate)
 
@@ -152,7 +156,7 @@ export default function SettingsPage() {
     setIsEditing(false)
   }
 
-  if (isEditing) {
+  if (isEditing && budget) {
     return (
       <div className="flex min-h-[80vh] flex-col justify-center">
         <div className="mb-8 flex items-center gap-3">
@@ -160,7 +164,7 @@ export default function SettingsPage() {
             <Wallet className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">Edit Budget</h1>
+            <h1 className="font-heading text-xl font-bold">Edit Budget</h1>
             <p className="text-xs text-muted">Step {editStep} of 2</p>
           </div>
           <button
@@ -203,7 +207,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">Settings</h1>
+      <h1 className="font-heading text-xl font-bold">Settings</h1>
 
       <div className="rounded-xl border border-border bg-card p-4">
         <h2 className="mb-3 font-semibold">Appearance</h2>
@@ -245,75 +249,122 @@ export default function SettingsPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold">Budget Details</h2>
-          <button
-            onClick={startEditing}
-            className="flex items-center gap-1.5 rounded-lg bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
-          >
-            <Pencil className="h-3 w-3" />
-            Edit
-          </button>
+        <div className="mb-3 flex items-center gap-2">
+          <QrCode className="h-4 w-4 text-accent" />
+          <h2 className="font-semibold">App QR</h2>
         </div>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted">Period</span>
-            <span className="font-medium">
-              {PERIOD_LABELS[budget.period ?? "termly"]}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">Budget Amount</span>
-            <span className="font-medium">
-              {formatCurrency(budget.totalAmount)}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">Start Date</span>
-            <span className="font-medium">
-              {new Date(budget.startDate).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted">End Date</span>
-            <span className="font-medium">
-              {new Date(budget.endDate).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
-          </div>
+        <div className="flex flex-col items-center gap-3">
+          <Image
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+              APP_URL
+            )}`}
+            alt="QR code for UniWallet app link"
+            width={176}
+            height={176}
+            className="h-44 w-44 rounded-lg border border-border bg-white p-2"
+          />
+          <a
+            href={APP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
+          >
+            {APP_URL}
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
-        <h2 className="mb-3 font-semibold">Category Allocations</h2>
-        <div className="space-y-2 text-sm">
-          {budget.categories
-            .filter((c) => c.allocated > 0)
-            .map((cat) => (
-              <div key={cat.id} className="flex justify-between">
-                <span className="text-muted">{cat.name}</span>
-                <span className="font-medium">
-                  {formatCurrency(cat.allocated)}
-                </span>
-              </div>
-            ))}
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-semibold">Budget Details</h2>
+          {budget && (
+            <button
+              onClick={startEditing}
+              className="flex items-center gap-1.5 rounded-lg bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+            >
+              <Pencil className="h-3 w-3" />
+              Edit
+            </button>
+          )}
         </div>
+        {budget ? (
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-muted">Period</span>
+              <span className="font-medium">
+                {PERIOD_LABELS[budget.period ?? "termly"]}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted">Budget Amount</span>
+              <span className="font-medium">
+                {formatCurrency(budget.totalAmount)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted">Start Date</span>
+              <span className="font-medium">
+                {new Date(budget.startDate).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted">End Date</span>
+              <span className="font-medium">
+                {new Date(budget.endDate).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted">
+              No budget set up yet. You can still configure app appearance here.
+            </p>
+            <Link
+              href="/setup"
+              className="inline-flex items-center rounded-lg bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20"
+            >
+              Set Up Budget
+            </Link>
+          </div>
+        )}
       </div>
 
-      <button
-        onClick={handleReset}
-        className="flex w-full items-center justify-center gap-2 rounded-xl border border-accent/30 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
-      >
-        <RotateCcw className="h-4 w-4" />
-        Reset Budget
-      </button>
+      {budget && (
+        <div className="rounded-xl border border-border bg-card p-4">
+          <h2 className="mb-3 font-semibold">Category Allocations</h2>
+          <div className="space-y-2 text-sm">
+            {budget.categories
+              .filter((c) => c.allocated > 0)
+              .map((cat) => (
+                <div key={cat.id} className="flex justify-between">
+                  <span className="text-muted">{cat.name}</span>
+                  <span className="font-medium">
+                    {formatCurrency(cat.allocated)}
+                  </span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {budget && (
+        <button
+          onClick={handleReset}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-accent/30 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Reset Budget
+        </button>
+      )}
     </div>
   )
 }

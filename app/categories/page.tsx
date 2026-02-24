@@ -33,7 +33,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Categories</h1>
+      <h1 className="font-heading text-xl font-bold">Categories</h1>
 
       {budget.categories
         .filter((c) => c.allocated > 0)
