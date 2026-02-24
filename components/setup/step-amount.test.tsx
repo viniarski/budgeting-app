@@ -17,7 +17,7 @@ describe("StepAmount", () => {
       />
     )
 
-    const endDateButton = screen.getByRole("button", { name: "End Date" })
+    const endDateButton = screen.getByRole("button", { name: /End Date/i })
     expect(endDateButton).toBeDisabled()
     expect(endDateButton).toHaveAttribute("data-value", "2026-02-28")
   })
@@ -39,7 +39,7 @@ describe("StepAmount", () => {
       />
     )
 
-    fireEvent.click(screen.getByRole("button", { name: /weekly/i }))
+    fireEvent.click(screen.getByRole("radio", { name: /weekly/i }))
     expect(onPeriodChange).toHaveBeenCalledWith("weekly")
   })
 

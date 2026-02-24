@@ -63,6 +63,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.font-heading {
+  letter-spacing: 0.02em;
+}
+
 /* Render native form controls (date-picker icon, etc.) for dark mode */
 input[type="date"] {
   display: block;

@@ -60,23 +60,29 @@ export default function BottomNav() {
   return (
     <nav className="desktop-sidebar fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom md:top-0 md:right-auto md:w-56 md:border-r md:border-t-0 md:bg-card/95 md:backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around md:mx-0 md:h-full md:max-w-none md:flex-col md:items-stretch md:px-3 md:pb-4 md:pt-20">
-        {primaryTabs.map(tab => (
-          <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
-        ))}
-
-        <div className="hidden md:mt-3 md:block md:border-t md:border-border md:pt-3">
-          {insightTabs.map(tab => (
+        <div className="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-1">
+          {primaryTabs.map(tab => (
             <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
           ))}
         </div>
 
         <div className="hidden md:block md:border-t md:border-border md:pt-3">
-          {accountTabs.map(tab => (
-            <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
-          ))}
+          <div className="space-y-1">
+            {insightTabs.map(tab => (
+              <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
+            ))}
+          </div>
         </div>
 
-        <div className="hidden md:flex md:justify-center md:pt-3">
+        <div className="hidden md:block md:border-t md:border-border md:pt-3">
+          <div className="space-y-1">
+            {accountTabs.map(tab => (
+              <NavItem key={tab.href} tab={tab} isActive={isTabActive(tab.href)} />
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden md:flex md:justify-center md:border-t md:border-border md:pt-3">
           <button
             onClick={isSidebarHidden ? showSidebar : hideSidebar}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted transition-colors hover:border-accent/40 hover:text-accent"
@@ -98,7 +104,7 @@ function NavItem({ tab, isActive }: { tab: NavTab; isActive: boolean }) {
   return (
     <Link
       href={tab.href}
-      className={`desktop-sidebar-link flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors md:flex-row md:gap-3 md:rounded-xl md:px-4 md:py-3 md:text-sm ${
+      className={`group desktop-sidebar-link flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors md:flex-row md:gap-3 md:rounded-xl md:px-4 md:py-3 md:text-sm ${
         tab.desktopOnly ? "hidden md:flex" : ""
       } ${
         isActive
@@ -109,10 +115,12 @@ function NavItem({ tab, isActive }: { tab: NavTab; isActive: boolean }) {
       {tab.href === "/add" ? (
         <span
           className={`flex h-6 w-6 items-center justify-center rounded-full border ${
-            isActive ? "border-accent text-accent" : "border-muted text-muted"
+            isActive
+              ? "border-accent bg-accent text-white"
+              : "border-muted text-muted group-hover:border-accent group-hover:bg-accent group-hover:text-white"
           }`}
         >
-          <tab.icon className="h-4 w-4" />
+          <tab.icon className="h-4 w-4 stroke-[2.25]" />
         </span>
       ) : (
         <tab.icon className="h-5 w-5" />
