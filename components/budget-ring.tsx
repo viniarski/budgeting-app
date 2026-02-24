@@ -50,7 +50,7 @@ export default function BudgetRing({ spent, total, size = 100 }: BudgetRingProps
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-sm font-bold text-accent">
+        <span className="font-heading text-sm text-accent">
           {percentage.toFixed(0)}%
         </span>
         <span className="text-[10px] text-muted">used</span>

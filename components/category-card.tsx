@@ -46,7 +46,7 @@ export default function CategoryCard({
             style={{ width: `${Math.min(100, percentage)}%` }}
           />
         </div>
-        <p className="mt-1.5 text-xs text-muted">
+        <p className="font-heading mt-1.5 text-xs text-muted">
           {formatCurrency(spent)} / {formatCurrency(category.allocated)}
         </p>
       </div>
@@ -64,13 +64,13 @@ export default function CategoryCard({
           </div>
           <div>
             <p className="font-medium">{category.name}</p>
-            <p className="text-xs text-muted">
+            <p className="font-heading text-xs text-muted">
               {formatCurrency(spent)} of {formatCurrency(category.allocated)}
             </p>
           </div>
         </div>
         <span
-          className={`text-sm font-semibold ${
+          className={`font-heading text-sm ${
             remaining < 0 ? "text-danger" : "text-foreground"
           }`}
         >

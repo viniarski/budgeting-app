@@ -44,7 +44,7 @@ export default function AddExpenseForm() {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success text-white">
           <Check className="h-8 w-8" />
         </div>
-        <p className="mt-4 text-lg font-semibold">Expense Added!</p>
+        <p className="font-heading mt-4 text-lg">Expense Added!</p>
       </div>
     )
   }
@@ -63,7 +63,7 @@ export default function AddExpenseForm() {
             placeholder="0.00"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border border-border bg-card py-4 pl-12 pr-4 text-4xl font-bold text-foreground outline-none transition-colors focus:border-accent"
+            className="font-heading w-full rounded-xl border border-border bg-card py-4 pl-12 pr-4 text-4xl text-foreground outline-none transition-colors focus:border-accent"
             autoFocus
           />
         </div>

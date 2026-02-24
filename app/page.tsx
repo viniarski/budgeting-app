@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo, useState } from "react"
 import Link from "next/link"
 import { useBudget } from "@/contexts/budget-context"
 import {
@@ -22,6 +23,7 @@ import {
   PiggyBank,
   Target,
   Loader2,
+  Search,
 } from "lucide-react"
 
 function WelcomeDashboard() {
@@ -100,6 +102,15 @@ function WelcomeDashboard() {
 export default function DashboardPage() {
   const { state, isHydrated } = useBudget()
   const { budget, expenses, isOnboarded } = state
+  const [categoryQuery, setCategoryQuery] = useState("")
+  const allocatedCategories = budget?.categories.filter((c) => c.allocated > 0) ?? []
+  const visibleCategories = useMemo(() => {
+    const normalized = categoryQuery.trim().toLowerCase()
+    if (!normalized) return allocatedCategories
+    return allocatedCategories.filter((c) =>
+      c.name.toLowerCase().includes(normalized)
+    )
+  }, [allocatedCategories, categoryQuery])
 
   if (!isHydrated) {
     return (
@@ -134,11 +145,11 @@ export default function DashboardPage() {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs text-muted">Total Remaining</p>
-            <p className="mt-1 text-3xl font-bold text-accent">
+            <p className="font-heading mt-1 text-3xl font-bold text-accent">
               {formatCurrency(Math.max(0, remaining))}
             </p>
             <p className="mt-0.5 text-xs text-muted">
-              of {formatCurrency(budget.totalAmount)} budget
+              of <span className="font-heading">{formatCurrency(budget.totalAmount)}</span> budget
             </p>
           </div>
           <BudgetRing spent={totalSpent} total={budget.totalAmount} />
@@ -149,19 +160,19 @@ export default function DashboardPage() {
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <Wallet className="mx-auto mb-1 h-4 w-4 text-accent" />
           <p className="text-xs text-muted">Daily</p>
-          <p className="text-sm font-bold text-accent">
+          <p className="font-heading text-sm font-bold text-accent">
             {formatCurrency(dailyAllowance)}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <CalendarClock className="mx-auto mb-1 h-4 w-4 text-accent" />
           <p className="text-xs text-muted">Days Left</p>
-          <p className="text-sm font-bold text-accent">{daysRemaining}</p>
+          <p className="font-heading text-sm font-bold text-accent">{daysRemaining}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <TrendingDown className="mx-auto mb-1 h-4 w-4 text-accent" />
           <p className="text-xs text-muted">Spent</p>
-          <p className="text-sm font-bold text-accent">
+          <p className="font-heading text-sm font-bold text-accent">
             {formatCurrency(totalSpent)}
           </p>
         </div>
@@ -212,10 +223,20 @@ export default function DashboardPage() {
             Set Goals
           </Link>
         </div>
+        {allocatedCategories.length > 6 && (
+          <div className="relative mb-3">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <input
+              type="text"
+              value={categoryQuery}
+              onChange={(e) => setCategoryQuery(e.target.value)}
+              placeholder="Search categories"
+              className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm outline-none transition-colors focus:border-accent"
+            />
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-2">
-          {budget.categories
-            .filter((c) => c.allocated > 0)
-            .map((cat) => (
+          {visibleCategories.map((cat) => (
               <CategoryCard
                 key={cat.id}
                 category={cat}

@@ -60,9 +60,6 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition:
-    background-color 180ms ease,
-    color 180ms ease;
 }
 
 /* Render native form controls (date-picker icon, etc.) for dark mode */
@@ -109,26 +106,26 @@ input[type="number"] {
       transform 180ms ease;
   }
 
-  body[data-sidebar="hidden"] .desktop-header {
+  [data-sidebar="hidden"] .desktop-header {
     left: 4.5rem;
   }
 
-  body[data-sidebar="hidden"] .desktop-main {
+  [data-sidebar="hidden"] .desktop-main {
     margin-left: 4.5rem;
   }
 
-  body[data-sidebar="hidden"] .desktop-sidebar {
+  [data-sidebar="hidden"] .desktop-sidebar {
     width: 4.5rem;
     transform: translateX(0);
   }
 
-  body[data-sidebar="hidden"] .desktop-sidebar-link {
+  [data-sidebar="hidden"] .desktop-sidebar-link {
     justify-content: center;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
 
-  body[data-sidebar="hidden"] .desktop-sidebar-label {
+  [data-sidebar="hidden"] .desktop-sidebar-label {
     display: none;
   }
 }

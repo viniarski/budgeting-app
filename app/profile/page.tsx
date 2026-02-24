@@ -57,28 +57,28 @@ export default function ProfilePage() {
                 <Wallet className="h-3.5 w-3.5" />
                 <span className="text-xs">Budget</span>
               </div>
-              <p className="text-sm font-bold">{formatCurrency(budget.totalAmount)}</p>
+              <p className="font-heading text-sm">{formatCurrency(budget.totalAmount)}</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-3">
               <div className="mb-1 flex items-center gap-1.5 text-muted">
                 <Receipt className="h-3.5 w-3.5" />
                 <span className="text-xs">Spent</span>
               </div>
-              <p className="text-sm font-bold text-accent">{formatCurrency(totalSpent)}</p>
+              <p className="font-heading text-sm text-accent">{formatCurrency(totalSpent)}</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-3">
               <div className="mb-1 flex items-center gap-1.5 text-muted">
                 <ListChecks className="h-3.5 w-3.5" />
                 <span className="text-xs">Categories</span>
               </div>
-              <p className="text-sm font-bold">{allocatedCount}</p>
+              <p className="font-heading text-sm">{allocatedCount}</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-3">
               <div className="mb-1 flex items-center gap-1.5 text-muted">
                 <Receipt className="h-3.5 w-3.5" />
                 <span className="text-xs">Expenses</span>
               </div>
-              <p className="text-sm font-bold">{expenses.length}</p>
+              <p className="font-heading text-sm">{expenses.length}</p>
             </div>
           </div>
 

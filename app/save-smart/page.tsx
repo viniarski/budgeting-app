@@ -12,6 +12,12 @@ import {
 } from "@/lib/budget-utils"
 import { Loader2, Sparkles, ShieldCheck, PiggyBank } from "lucide-react"
 
+type TipCandidate = {
+  id: string
+  text: string
+  score: number
+}
+
 export default function SaveSmartPage() {
   const router = useRouter()
   const { state, isHydrated } = useBudget()
@@ -64,69 +70,73 @@ export default function SaveSmartPage() {
   const todayStr = now.toISOString().slice(0, 10)
   const todayExpenses = expenses.filter((e) => e.date.slice(0, 10) === todayStr)
 
-  const suggestions: string[] = []
+  const candidates: TipCandidate[] = []
+  const addTip = (id: string, text: string, score: number) => {
+    if (!text || candidates.some((tip) => tip.id === id)) return
+    candidates.push({ id, text, score })
+  }
 
-  // --- Slot 1: overspent / on-track ---
   if (overspent.length > 0) {
     const top = overspent[0]
-    suggestions.push(
-      `${top.category.name} is over plan by ${formatCurrency(top.spent - top.category.allocated)}. Cap this category for the next 7 days.`
-    )
-  } else {
-    suggestions.push(
-      "No category is over budget right now. Keep the same spend pace this week."
+    addTip(
+      `overspent-${top.category.id}`,
+      `${top.category.name} is over plan by ${formatCurrency(top.spent - top.category.allocated)}. Cap this category for the next 7 days.`,
+      100
     )
   }
 
-  // --- Slot 2: low usage reallocation ---
   if (lowUsage.length > 0) {
     const from = lowUsage[0]
     const reallocate = Math.max(0, from.category.allocated - from.spent) * 0.3
-    suggestions.push(
-      `Move about ${formatCurrency(reallocate)} from ${from.category.name} into Savings or Emergency to protect your remaining budget.`
-    )
-  } else {
-    suggestions.push(
-      "Your allocations are being used evenly. Keep tracking daily to avoid last-minute overspend."
+    addTip(
+      `reallocate-${from.category.id}`,
+      `Move about ${formatCurrency(reallocate)} from ${from.category.name} into Savings or Emergency to protect your remaining budget.`,
+      85
     )
   }
 
-  // --- Slot 3: AI save target (always shown) ---
   const weeklySave = totalRemaining * 0.12
-  suggestions.push(
-    `AI target: save ${formatCurrency(weeklySave)} this week by keeping daily spend under ${formatCurrency(dailyAllowance * 0.9)}.`
+  addTip(
+    "ai-target",
+    `AI target: save ${formatCurrency(weeklySave)} this week by keeping daily spend under ${formatCurrency(dailyAllowance * 0.9)}.`,
+    75
   )
 
-  // --- Slot 4: spending velocity ---
   const expectedSpent = budget.totalAmount * Math.min(1, elapsed)
   if (totalSpent > expectedSpent && expectedSpent > 0) {
-    suggestions.push(
-      "You're spending faster than planned. Slow down to stay on track."
+    addTip(
+      "spend-velocity-high",
+      "You're spending faster than planned. Slow down to stay on track.",
+      90
     )
   } else if (expectedSpent > 0 && totalSpent < expectedSpent * 0.7) {
-    suggestions.push(
-      "You're under your spending pace — great discipline!"
+    addTip(
+      "spend-velocity-low",
+      "You're under your spending pace. Keep this pace to build extra buffer.",
+      40
     )
   }
 
-  // --- Slot 5: time-based urgency ---
   if (daysRemaining <= 3 && daysRemaining > 0) {
-    suggestions.push(
-      `Only ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left! Stick to essentials only.`
+    addTip(
+      "days-left-critical",
+      `Only ${daysRemaining} day${daysRemaining === 1 ? "" : "s"} left. Stick to essentials only.`,
+      88
     )
   } else if (daysRemaining >= 4 && daysRemaining <= 10) {
-    suggestions.push(
-      "You're in the home stretch — review subscriptions or upcoming bills."
+    addTip(
+      "days-left-warning",
+      "You're in the home stretch. Review subscriptions and non-essential spending.",
+      60
     )
   } else if (daysRemaining > 14) {
-    suggestions.push(
-      `Still early in the period. Set a daily cap of ${formatCurrency(dailyAllowance)} to stay safe.`
+    addTip(
+      "days-left-early",
+      `Still early in the period. Set a daily cap of ${formatCurrency(dailyAllowance)} to stay safe.`,
+      35
     )
   }
 
-  // --- Contextual tips (0-3 shown depending on data) ---
-
-  // Large expense alert
   const largestExpense = expenses.length > 0
     ? expenses.reduce((max, e) => (e.amount > max.amount ? e : max), expenses[0])
     : null
@@ -136,33 +146,38 @@ export default function SaveSmartPage() {
     largestExpense.amount > budget.totalAmount * 0.25
   ) {
     const pct = Math.round((largestExpense.amount / budget.totalAmount) * 100)
-    suggestions.push(
-      `Your largest expense (${largestExpense.description || "item"}: ${formatCurrency(largestExpense.amount)}) is ${pct}% of your whole budget. Watch for similar spikes.`
+    addTip(
+      "largest-expense",
+      `Largest expense (${largestExpense.description || "item"}: ${formatCurrency(largestExpense.amount)}) is ${pct}% of your full budget. Avoid similar spikes this period.`,
+      72
     )
   }
 
-  // Expense frequency today
   if (todayExpenses.length >= 3) {
-    suggestions.push(
-      `You've logged ${todayExpenses.length} expenses today. Batch purchases can help reduce impulse buys.`
+    addTip(
+      "many-expenses-today",
+      `You've logged ${todayExpenses.length} expenses today. Batch purchases to reduce impulse buys.`,
+      66
     )
   }
 
-  // Weekend awareness
   if (dayOfWeek === 5 || dayOfWeek === 6) {
     const weekendLimit = formatCurrency(dailyAllowance * 1.5)
-    suggestions.push(
-      `Weekends are peak spending time for students. Set a weekend-only limit of ${weekendLimit}.`
+    addTip(
+      "weekend-limit",
+      `Weekends are peak spending time. Set a weekend limit of ${weekendLimit}.`,
+      58
     )
   }
 
-  // Savings nudge
   const savingsCategory = budget.categories.find(
     (c) => c.name.toLowerCase().includes("saving") || c.name.toLowerCase().includes("emergency")
   )
   if (!savingsCategory) {
-    suggestions.push(
-      "Consider adding a Savings category — even 5% of your budget builds a safety net."
+    addTip(
+      "add-savings-category",
+      "Add a Savings category. Even 5% of budget creates a safety net.",
+      62
     )
   } else {
     const savingsSpent = expenses
@@ -170,27 +185,40 @@ export default function SaveSmartPage() {
       .reduce((sum, e) => sum + e.amount, 0)
     if (savingsSpent === 0 && savingsCategory.allocated > 0) {
       const nudge = formatCurrency(savingsCategory.allocated * 0.3)
-      suggestions.push(
-        `Your ${savingsCategory.name} category has room. Try moving ${nudge} into it this week.`
+      addTip(
+        "fund-savings-category",
+        `Your ${savingsCategory.name} category has room. Move ${nudge} into it this week.`,
+        64
       )
     }
   }
 
-  // Multiple overspent warning
   if (overspent.length >= 2) {
-    suggestions.push(
-      `${overspent.length} categories are over budget. Prioritise the biggest overspend first.`
+    addTip(
+      "multi-overspent",
+      `${overspent.length} categories are over budget. Prioritize the biggest overspend first.`,
+      94
     )
   }
 
-  // No-spend encouragement
   if (todayExpenses.length === 0) {
-    suggestions.push(
-      `No spending yet today — a no-spend day saves your daily allowance of ${formatCurrency(dailyAllowance)}!`
+    addTip(
+      "no-spend-day",
+      `No spending yet today. A no-spend day protects ${formatCurrency(dailyAllowance)} of your allowance.`,
+      45
     )
   }
 
-  const topSuggestions = suggestions.slice(0, 3)
+  if (candidates.length === 0) {
+    addTip(
+      "fallback",
+      "You are on track. Keep logging expenses daily and avoid unplanned purchases.",
+      10
+    )
+  }
+  const topSuggestions = [...candidates]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
 
   return (
     <div className="space-y-5">
@@ -211,21 +239,21 @@ export default function SaveSmartPage() {
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div className="rounded-lg border border-border bg-background p-3">
             <p className="text-xs text-muted">Remaining</p>
-            <p className="mt-1 font-semibold text-accent">
+            <p className="font-heading mt-1 text-base font-semibold text-accent">
               {formatCurrency(totalRemaining)}
             </p>
           </div>
           <div className="rounded-lg border border-border bg-background p-3">
             <p className="text-xs text-muted">Daily target</p>
-            <p className="mt-1 font-semibold">{formatCurrency(dailyAllowance)}</p>
+            <p className="font-heading mt-1 text-base font-semibold">{formatCurrency(dailyAllowance)}</p>
           </div>
           <div className="rounded-lg border border-border bg-background p-3">
             <p className="text-xs text-muted">Spent so far</p>
-            <p className="mt-1 font-semibold">{formatCurrency(totalSpent)}</p>
+            <p className="font-heading mt-1 text-base font-semibold">{formatCurrency(totalSpent)}</p>
           </div>
           <div className="rounded-lg border border-border bg-background p-3">
             <p className="text-xs text-muted">Days left</p>
-            <p className="mt-1 font-semibold">{daysRemaining}</p>
+            <p className="font-heading mt-1 text-base font-semibold">{daysRemaining}</p>
           </div>
         </div>
       </div>
@@ -238,10 +266,10 @@ export default function SaveSmartPage() {
         <ul className="space-y-2">
           {topSuggestions.map((tip) => (
             <li
-              key={tip}
+              key={tip.id}
               className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
             >
-              {tip}
+              {tip.text}
             </li>
           ))}
         </ul>

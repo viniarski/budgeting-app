@@ -142,19 +142,19 @@ function GoalsEditor({
       <div>
         <h1 className="font-heading text-xl font-bold">Set Goals</h1>
         <p className="text-sm text-muted">
-          Spread {formatCurrency(budget.totalAmount)} across categories
+          Spread <span className="font-heading">{formatCurrency(budget.totalAmount)}</span> across categories
         </p>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">Allocated</span>
-          <span className="font-semibold">{formatCurrency(totalAllocated)}</span>
+          <span className="font-heading">{formatCurrency(totalAllocated)}</span>
         </div>
         <div className="mt-2 flex items-center justify-between text-sm">
           <span className="text-muted">Remaining</span>
           <span
-            className={`font-semibold ${
+            className={`font-heading ${
               remaining < 0
                 ? "text-danger"
                 : remaining === 0
@@ -189,7 +189,7 @@ function GoalsEditor({
                 min={0}
                 value={allocations[category.id] || ""}
                 onChange={(e) => handleAmountChange(category.id, e.target.value)}
-                className="w-full rounded-lg border border-border bg-background py-2 pl-6 pr-2 text-right text-sm font-medium outline-none transition-colors focus:border-accent"
+                className="font-heading w-full rounded-lg border border-border bg-background py-2 pl-6 pr-2 text-right text-sm outline-none transition-colors focus:border-accent"
               />
             </div>
             <button

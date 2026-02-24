@@ -126,22 +126,22 @@ export default function HistoryPage() {
       <div className="grid grid-cols-3 gap-2">
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-xs text-muted">Transactions</p>
-          <p className="mt-1 text-sm font-bold">{filteredExpenses.length}</p>
+          <p className="font-heading mt-1 text-sm">{filteredExpenses.length}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-xs text-muted">Total</p>
-          <p className="mt-1 text-sm font-bold text-accent">{formatCurrency(total)}</p>
+          <p className="font-heading mt-1 text-sm text-accent">{formatCurrency(total)}</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-xs text-muted">Avg / Tx</p>
-          <p className="mt-1 text-sm font-bold">{formatCurrency(average)}</p>
+          <p className="font-heading mt-1 text-sm">{formatCurrency(average)}</p>
         </div>
       </div>
 
       {largest > 0 && (
         <p className="text-xs text-muted">
           Largest transaction:{" "}
-          <span className="font-semibold text-foreground">
+          <span className="font-heading text-foreground">
             {formatCurrency(largest)}
           </span>
         </p>

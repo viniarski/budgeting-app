@@ -119,7 +119,7 @@ export default function StepAmount({
             placeholder={period === "termly" ? "4,500" : period === "monthly" ? "1,200" : "300"}
             value={amount}
             onChange={(e) => onAmountChange(e.target.value)}
-            className="w-full rounded-xl border border-border bg-card py-3 pl-10 pr-4 text-lg font-semibold text-foreground outline-none transition-colors focus:border-accent"
+            className="font-heading w-full rounded-xl border border-border bg-card py-3 pl-10 pr-4 text-lg text-foreground outline-none transition-colors focus:border-accent"
           />
         </div>
       </div>

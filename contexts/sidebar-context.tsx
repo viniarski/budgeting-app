@@ -20,7 +20,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   })
 
   useEffect(() => {
-    document.body.setAttribute("data-sidebar", isSidebarHidden ? "hidden" : "shown")
+    document.documentElement.setAttribute(
+      "data-sidebar",
+      isSidebarHidden ? "hidden" : "shown"
+    )
     localStorage.setItem(SIDEBAR_STORAGE_KEY, String(isSidebarHidden))
   }, [isSidebarHidden])
 

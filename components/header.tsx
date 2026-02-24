@@ -45,7 +45,7 @@ export default function Header() {
               }}
               aria-hidden
             />
-            <span className="font-heading text-base font-bold">UniWallet</span>
+            <span className="font-heading text-lg leading-none">UniWallet</span>
           </Link>
 
           <button
@@ -101,7 +101,6 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Menu items */}
           <nav className="space-y-1">
             <Link
               href="/save-smart"
@@ -135,6 +134,8 @@ export default function Header() {
               <ChevronRight className="h-4 w-4 text-muted" />
             </Link>
 
+            <div className="my-2 border-t border-border" />
+
             <Link
               href="/settings"
               onClick={() => setMenuOpen(false)}
@@ -150,22 +151,24 @@ export default function Header() {
               </div>
               <ChevronRight className="h-4 w-4 text-muted" />
             </Link>
+          </nav>
 
-            <Link
-              href="/profile"
-              onClick={() => setMenuOpen(false)}
-              className={`flex items-center justify-between rounded-xl px-3 py-3 text-sm transition-colors ${
-                pathname === "/profile"
-                  ? "bg-accent/10 text-accent"
-                  : "text-foreground hover:bg-card"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <User className="h-4 w-4 text-muted" />
-                <span>Profile</span>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted" />
-            </Link>
+          <nav className="mt-2 space-y-1">
+          <Link
+            href="/profile"
+            onClick={() => setMenuOpen(false)}
+            className={`flex items-center justify-between rounded-xl px-3 py-3 text-sm transition-colors ${
+              pathname === "/profile"
+                ? "bg-accent/10 text-accent"
+                : "text-foreground hover:bg-card"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <User className="h-4 w-4 text-muted" />
+              <span>Profile</span>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted" />
+          </Link>
           </nav>
 
           {/* Reset at the bottom */}

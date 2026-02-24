@@ -147,7 +147,7 @@ export default function CalculatorPage() {
             placeholder="0.00"
             value={income}
             onChange={(e) => setIncome(e.target.value)}
-            className="w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-xl font-bold text-foreground outline-none transition-colors focus:border-accent"
+            className="font-heading w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-xl text-foreground outline-none transition-colors focus:border-accent"
           />
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -199,7 +199,7 @@ export default function CalculatorPage() {
             <div key={item.label}>
               <div className="mb-1 flex justify-between text-sm">
                 <span className="text-muted">{item.label}</span>
-                <span className="font-medium">{item.value}%</span>
+                <span className="font-heading">{item.value}%</span>
               </div>
               <input
                 type="range"
@@ -230,7 +230,7 @@ export default function CalculatorPage() {
                   <div className="h-3 w-3 rounded-full bg-success" />
                   <span className="text-sm font-medium">Needs</span>
                 </div>
-                <span className="text-lg font-bold text-success">
+                <span className="font-heading text-lg text-success">
                   {formatCurrency(needsAmount)}
                 </span>
               </div>
@@ -245,7 +245,7 @@ export default function CalculatorPage() {
                   <div className="h-3 w-3 rounded-full bg-blue-500" />
                   <span className="text-sm font-medium">Wants</span>
                 </div>
-                <span className="text-lg font-bold text-blue-500">
+                <span className="font-heading text-lg text-blue-500">
                   {formatCurrency(wantsAmount)}
                 </span>
               </div>
@@ -260,7 +260,7 @@ export default function CalculatorPage() {
                   <div className="h-3 w-3 rounded-full bg-warning" />
                   <span className="text-sm font-medium">Savings</span>
                 </div>
-                <span className="text-lg font-bold text-warning">
+                <span className="font-heading text-lg text-warning">
                   {formatCurrency(savingsAmount)}
                 </span>
               </div>
@@ -290,15 +290,15 @@ export default function CalculatorPage() {
           <div className="grid grid-cols-3 gap-2">
             <div className="rounded-xl border border-border bg-card p-3 text-center">
               <p className="text-[10px] text-muted">Monthly</p>
-              <p className="text-sm font-bold">{formatCurrency(monthly)}</p>
+              <p className="font-heading text-sm">{formatCurrency(monthly)}</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-3 text-center">
               <p className="text-[10px] text-muted">Weekly</p>
-              <p className="text-sm font-bold">{formatCurrency(weekly)}</p>
+              <p className="font-heading text-sm">{formatCurrency(weekly)}</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-3 text-center">
               <p className="text-[10px] text-muted">Daily</p>
-              <p className="text-sm font-bold">{formatCurrency(daily)}</p>
+              <p className="font-heading text-sm">{formatCurrency(daily)}</p>
             </div>
           </div>
 
@@ -320,7 +320,7 @@ export default function CalculatorPage() {
               {/* Needs breakdown */}
               <div>
                 <p className="mb-2 text-xs font-semibold text-muted">
-                  Needs ({formatCurrency(needsAmount)}/mo)
+                  Needs (<span className="font-heading">{formatCurrency(needsAmount)}</span>/mo)
                 </p>
                 <div className="space-y-1.5">
                   {BREAKDOWN_ITEMS.filter((i) => i.category === "needs").map(
@@ -336,7 +336,7 @@ export default function CalculatorPage() {
                             <Icon className="h-4 w-4" />
                           </div>
                           <span className="flex-1 text-sm">{item.label}</span>
-                          <span className="text-sm font-semibold">
+                          <span className="font-heading text-sm">
                             {formatCurrency(amt)}
                           </span>
                         </div>
@@ -352,8 +352,8 @@ export default function CalculatorPage() {
                 <div>
                   <p className="text-sm font-medium">Saving Tip</p>
                   <p className="mt-0.5 text-xs text-muted">
-                    Putting away {formatCurrency(savingsAmount)}/month gives you{" "}
-                    {formatCurrency(savingsAmount * 12)} in a year. Even small
+                    Putting away <span className="font-heading">{formatCurrency(savingsAmount)}</span>/month gives you{" "}
+                    <span className="font-heading">{formatCurrency(savingsAmount * 12)}</span> in a year. Even small
                     amounts add up!
                   </p>
                 </div>

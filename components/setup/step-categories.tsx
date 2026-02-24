@@ -161,7 +161,7 @@ export default function StepCategories({
       <div>
         <h2 className="font-heading text-2xl font-bold">Assign your money</h2>
         <p className="mt-1 text-sm text-muted">
-          Split {formatCurrency(totalAmount)} across your spending categories.
+          Split <span className="font-heading">{formatCurrency(totalAmount)}</span> across your spending categories.
         </p>
       </div>
 
@@ -170,7 +170,7 @@ export default function StepCategories({
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted">Unallocated</span>
           <span
-            className={`font-bold ${
+            className={`font-heading ${
               remaining < 0
                 ? "text-danger"
                 : remaining === 0
@@ -219,7 +219,7 @@ export default function StepCategories({
                   onChange={(e) =>
                     onAllocationChange(cat.id, parseFloat(e.target.value) || 0)
                   }
-                  className="w-full rounded-lg border border-border bg-background py-2 pl-6 pr-2 text-right text-sm font-medium text-foreground outline-none focus:border-accent"
+                  className="font-heading w-full rounded-lg border border-border bg-background py-2 pl-6 pr-2 text-right text-sm text-foreground outline-none focus:border-accent"
                 />
               </div>
               <button

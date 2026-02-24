@@ -42,7 +42,7 @@ export default function ExpenseItem({
           })}
         </p>
       </div>
-      <span className="text-sm font-semibold text-accent">
+      <span className="font-heading text-sm text-accent">
         -{formatCurrency(expense.amount)}
       </span>
       {onDelete && (

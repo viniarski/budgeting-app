@@ -105,17 +105,17 @@ export default function TrackSpendPage() {
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-muted">Period</span>
-            <span className="font-medium">
+            <span className="font-heading">
               {PERIOD_LABELS[budget.period ?? "termly"]}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted">Budget Amount</span>
-            <span className="font-medium">{formatCurrency(budget.totalAmount)}</span>
+            <span className="font-heading">{formatCurrency(budget.totalAmount)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted">Start Date</span>
-            <span className="font-medium">
+            <span className="font-heading">
               {new Date(budget.startDate).toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -125,7 +125,7 @@ export default function TrackSpendPage() {
           </div>
           <div className="flex justify-between">
             <span className="text-muted">End Date</span>
-            <span className="font-medium">
+            <span className="font-heading">
               {new Date(budget.endDate).toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -144,7 +144,7 @@ export default function TrackSpendPage() {
             .map((cat) => (
               <div key={cat.id} className="flex justify-between">
                 <span className="text-muted">{cat.name}</span>
-                <span className="font-medium">{formatCurrency(cat.allocated)}</span>
+                <span className="font-heading">{formatCurrency(cat.allocated)}</span>
               </div>
             ))}
         </div>
@@ -152,7 +152,7 @@ export default function TrackSpendPage() {
 
       <div className="rounded-xl border border-border bg-card p-4">
         <p className="text-xs text-muted">Total Spent</p>
-        <p className="mt-1 text-2xl font-bold text-accent">
+        <p className="font-heading mt-1 text-2xl font-bold text-accent">
           {formatCurrency(totalSpent)}
         </p>
       </div>
@@ -183,9 +183,9 @@ export default function TrackSpendPage() {
                           backgroundColor: PIE_COLORS[index % PIE_COLORS.length],
                         }}
                       />
-                      <span>{category.name}</span>
-                    </div>
-                    <span className="text-muted">
+                    <span>{category.name}</span>
+                  </div>
+                    <span className="font-heading text-muted">
                       {formatCurrency(category.spent)} ({pct.toFixed(0)}%)
                     </span>
                   </div>
@@ -219,11 +219,17 @@ export default function TrackSpendPage() {
           <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted">
             Daily Totals
           </p>
-          <div className="space-y-1">
+          <div className="mx-auto max-w-xs space-y-1.5">
           {dailyTrend.map((day) => (
-            <div key={`${day.label}-value`} className="flex justify-between text-xs">
+            <div
+              key={`${day.label}-value`}
+              className="grid grid-cols-[32px_1fr_auto] items-center gap-2 text-xs"
+            >
               <span className="text-muted">{day.label}</span>
-              <span>{formatCurrency(day.amount)}</span>
+              <span className="h-px bg-border" />
+              <span className="font-heading text-foreground">
+                {formatCurrency(day.amount)}
+              </span>
             </div>
           ))}
           </div>
