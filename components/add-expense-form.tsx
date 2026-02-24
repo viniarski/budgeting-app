@@ -11,6 +11,10 @@ function getIcon(name: string): LucideIcon {
   return (Icons as unknown as Record<string, LucideIcon>)[name] ?? Icons.CircleDot
 }
 
+function isValidAmountInput(value: string): boolean {
+  return /^\d*\.?\d*$/.test(value)
+}
+
 export default function AddExpenseForm() {
   const router = useRouter()
   const { state, dispatch } = useBudget()
@@ -62,7 +66,16 @@ export default function AddExpenseForm() {
             inputMode="decimal"
             placeholder="0.00"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => {
+              const nextValue = e.target.value
+              if (!isValidAmountInput(nextValue)) return
+              setAmount(nextValue)
+            }}
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault()
+              }
+            }}
             className="font-heading w-full rounded-xl border border-border bg-card py-4 pl-12 pr-4 text-4xl text-foreground outline-none transition-colors focus:border-accent"
             autoFocus
           />

@@ -82,4 +82,16 @@ describe("AddExpenseForm", () => {
     vi.advanceTimersByTime(800)
     expect(pushMock).toHaveBeenCalledWith("/")
   })
+
+  it("blocks scientific notation and sign characters in amount input", () => {
+    render(<AddExpenseForm />)
+
+    const amountInput = screen.getByPlaceholderText("0.00")
+
+    fireEvent.change(amountInput, { target: { value: "12" } })
+    expect(amountInput).toHaveValue(12)
+
+    fireEvent.change(amountInput, { target: { value: "12e3" } })
+    expect(amountInput).toHaveValue(12)
+  })
 })
