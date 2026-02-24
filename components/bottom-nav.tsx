@@ -58,7 +58,7 @@ export default function BottomNav() {
   }
 
   return (
-    <nav className="desktop-sidebar fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom md:top-0 md:right-auto md:w-56 md:border-r md:border-t-0 md:bg-card/95 md:backdrop-blur-md">
+    <nav className="desktop-sidebar overflow-auto fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card safe-bottom md:top-0 md:right-auto md:w-56 md:border-r md:border-t-0 md:bg-card/95 md:backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-md items-center justify-around md:mx-0 md:h-full md:max-w-none md:flex-col md:items-stretch md:px-3 md:pb-4 md:pt-20">
         <div className="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-1">
           {primaryTabs.map(tab => (
