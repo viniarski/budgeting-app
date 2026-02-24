@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useBudget } from "@/contexts/budget-context"
 import {
@@ -10,12 +10,40 @@ import {
   formatCurrency,
   getDaysRemaining,
 } from "@/lib/budget-utils"
-import { Loader2, Sparkles, ShieldCheck, PiggyBank } from "lucide-react"
+import {
+  Loader2,
+  Sparkles,
+  ShieldCheck,
+  PiggyBank,
+  AlertTriangle,
+  ArrowRightLeft,
+  Target,
+} from "lucide-react"
 
 type TipCandidate = {
   id: string
   text: string
   score: number
+}
+
+function getTipTier(score: number): "High" | "Medium" | "Low" {
+  if (score >= 85) return "High"
+  if (score >= 60) return "Medium"
+  return "Low"
+}
+
+function getTipTierStyles(_score: number): string {
+  return "border-success/25 bg-success/10 text-success"
+}
+
+function getTipIcon(id: string, score: number) {
+  if (id.includes("overspent") || id.includes("critical") || score >= 85) {
+    return AlertTriangle
+  }
+  if (id.includes("reallocate") || id.includes("savings") || id.includes("fund")) {
+    return ArrowRightLeft
+  }
+  return Target
 }
 
 export default function SaveSmartPage() {
@@ -216,9 +244,21 @@ export default function SaveSmartPage() {
       10
     )
   }
-  const topSuggestions = [...candidates]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
+  const topSuggestions = useMemo(
+    () => [...candidates].sort((a, b) => b.score - a.score).slice(0, 3),
+    [candidates]
+  )
+  const [selectedTipId, setSelectedTipId] = useState(topSuggestions[0]?.id ?? "")
+  const [activeGoals, setActiveGoals] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    if (!topSuggestions.some((tip) => tip.id === selectedTipId)) {
+      setSelectedTipId(topSuggestions[0]?.id ?? "")
+    }
+  }, [topSuggestions, selectedTipId])
+
+  const selectedTip =
+    topSuggestions.find((tip) => tip.id === selectedTipId) ?? topSuggestions[0]
 
   return (
     <div className="space-y-5">
@@ -258,21 +298,72 @@ export default function SaveSmartPage() {
         </div>
       </div>
 
-      <div className="space-y-2 rounded-xl border border-border bg-card p-4">
-        <div className="flex items-center gap-2">
-          <PiggyBank className="h-4 w-4 text-accent" />
-          <h2 className="text-sm font-semibold">Recommended Moves</h2>
+      <div className="space-y-3 rounded-xl border border-border bg-card p-4">
+        <div className="rounded-xl border border-accent/20 bg-gradient-to-r from-accent/12 via-accent/8 to-transparent px-3 py-2.5">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/30 bg-accent/15">
+              <PiggyBank className="h-4 w-4 text-accent" />
+            </div>
+            <div>
+              <h2 className="font-heading text-sm uppercase tracking-wide">Recommended Moves</h2>
+              <p className="text-xs text-muted">AI-prioritized actions you can take now</p>
+            </div>
+          </div>
         </div>
-        <ul className="space-y-2">
-          {topSuggestions.map((tip) => (
-            <li
-              key={tip.id}
-              className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-            >
-              {tip.text}
-            </li>
-          ))}
+        <ul className="mt-5 grid grid-cols-3 gap-2">
+          {topSuggestions.map((tip, index) => {
+            const TipIcon = getTipIcon(tip.id, tip.score)
+            const isSelected = selectedTip?.id === tip.id
+            const isCompleted = Boolean(activeGoals[tip.id])
+            return (
+              <li key={tip.id} className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setSelectedTipId(tip.id)}
+                  aria-label={`Show move ${index + 1}`}
+                  aria-pressed={isSelected}
+                  className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full border transition-all ${
+                    isSelected || isCompleted
+                      ? `${getTipTierStyles(tip.score)} ${isSelected ? "scale-105 shadow-[0_0_0_3px_color-mix(in_oklab,var(--accent)_18%,transparent)]" : ""}`
+                      : "border-border bg-background/40 text-muted hover:border-accent/40 hover:text-accent"
+                  }`}
+                >
+                  <TipIcon className="h-5 w-5" />
+                </button>
+                <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-muted">
+                  Goal {index + 1}
+                </p>
+              </li>
+            )
+          })}
         </ul>
+        {selectedTip && (
+          <div className="rounded-xl border border-border bg-background/60 p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-success">
+                {getTipTier(selectedTip.score)} Priority Goal
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  setActiveGoals((current) => ({
+                    ...current,
+                    [selectedTip.id]: !current[selectedTip.id],
+                  }))
+                }
+                className="rounded-md border border-success/35 bg-success/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-success transition-opacity hover:opacity-90"
+              >
+                {activeGoals[selectedTip.id] ? "Clear Goal" : "Complete Goal"}
+              </button>
+            </div>
+            <p className="text-sm leading-5 text-foreground">{selectedTip.text}</p>
+            <p className="mt-2 text-[11px] text-muted">
+              {activeGoals[selectedTip.id]
+                ? "This goal is completed for this period."
+                : "Complete this goal to keep it highlighted."}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4 text-sm">
