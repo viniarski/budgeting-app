@@ -1,283 +1,94 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useBudget } from "@/contexts/budget-context"
-import { motion } from "framer-motion"
 import {
-  calculateSpent,
-  calculateDailyAllowance,
-  getDaysRemaining,
-  getCategorySpent,
-  formatCurrency,
-} from "@/lib/budget-utils"
-import BudgetRing from "@/components/budget-ring"
-import CategoryCard from "@/components/category-card"
-import ExpenseItem from "@/components/expense-item"
-import {
-  CalendarClock,
-  TrendingDown,
-  Wallet,
-  PlusCircle,
   ArrowRight,
-  GraduationCap,
+  BadgePercent,
   PiggyBank,
-  Target,
-  Loader2,
-  Search,
+  ShieldCheck,
+  Sparkles,
+  Tag,
+  TrendingUp,
 } from "lucide-react"
-import { useIsMobile } from "@/lib/use-is-mobile"
 
-function WelcomeDashboard() {
-  return (
-    <div className="space-y-8">
-      <div className="flex flex-col items-center py-6">
-        <div className="relative mb-6 h-[160px] w-[160px]">
-          <svg className="h-full w-full -rotate-90" viewBox="0 0 200 200">
-            <circle
-              cx="100"
-              cy="100"
-              r="88"
-              fill="none"
-              stroke="#262626"
-              strokeWidth="12"
-            />
-            <circle
-              cx="100"
-              cy="100"
-              r="88"
-              fill="none"
-              stroke="#10b981"
-              strokeWidth="12"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 88}
-              strokeDashoffset={2 * Math.PI * 88 * 0.75}
-              opacity="0.3"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <GraduationCap className="h-8 w-8 text-accent" />
-          </div>
-        </div>
-        <h2 className="text-lg font-bold">Welcome, Student!</h2>
-        <p className="mt-1 max-w-[260px] text-center text-sm text-muted">
-          Take control of your maintenance loan. Set up your budget to start
-          tracking.
-        </p>
-      </div>
+const FEATURE_POINTS = [
+  { title: "Plan your budget", icon: ShieldCheck },
+  { title: "Track spend live", icon: TrendingUp },
+  { title: "Save smarter", icon: PiggyBank },
+  { title: "Explore marketplace deals", icon: Tag },
+  { title: "Find student offers fast", icon: BadgePercent },
+]
 
-      <div className="grid grid-cols-3 gap-3">
-        <Link
-          href="/goals"
-          className="rounded-xl border border-border bg-card p-4 text-center transition-colors hover:border-accent/40"
-        >
-          <Target className="mx-auto mb-2 h-6 w-6 text-accent" />
-          <p className="text-xs font-medium">Set Goals</p>
-        </Link>
-        <Link
-          href="/save-smart"
-          className="rounded-xl border border-border bg-card p-4 text-center transition-colors hover:border-accent/40"
-        >
-          <PiggyBank className="mx-auto mb-2 h-6 w-6 text-accent" />
-          <p className="text-xs font-medium">Save Smart</p>
-        </Link>
-        <Link
-          href="/track-spend"
-          className="rounded-xl border border-border bg-card p-4 text-center transition-colors hover:border-accent/40"
-        >
-          <TrendingDown className="mx-auto mb-2 h-6 w-6 text-accent" />
-          <p className="text-xs font-medium">Track Spend</p>
-        </Link>
-      </div>
-
-      <Link
-        href="/setup"
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-3.5 font-semibold text-white transition-opacity hover:opacity-90"
-      >
-        Set Up Your Budget
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  )
-}
-
-export default function DashboardPage() {
+export default function WelcomePage() {
+  const router = useRouter()
   const { state, isHydrated } = useBudget()
-  const { budget, expenses, isOnboarded } = state
-  const [categoryQuery, setCategoryQuery] = useState("")
-  const isMobile = useIsMobile()
-  const allocatedCategories = budget?.categories.filter((c) => c.allocated > 0) ?? []
-  const visibleCategories = useMemo(() => {
-    const normalized = categoryQuery.trim().toLowerCase()
-    if (!normalized) return allocatedCategories
-    return allocatedCategories.filter((c) =>
-      c.name.toLowerCase().includes(normalized)
-    )
-  }, [allocatedCategories, categoryQuery])
+
+  useEffect(() => {
+    if (isHydrated && state.isOnboarded && state.budget) {
+      router.replace("/dashboard")
+    }
+  }, [isHydrated, state.isOnboarded, state.budget, router])
 
   if (!isHydrated) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-accent" />
+        <span className="text-sm text-muted">Loading...</span>
       </div>
     )
   }
 
-  if (!isOnboarded || !budget) {
-    return <WelcomeDashboard />
+  if (state.isOnboarded && state.budget) {
+    return null
   }
 
-  const introMotion = isMobile
-    ? { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.2 } }
-    : { initial: false, animate: false }
-
-  const sectionMotion = isMobile
-    ? { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.24 } }
-    : { initial: false, animate: false }
-
-  const totalSpent = calculateSpent(expenses)
-  const dailyAllowance = calculateDailyAllowance(budget, expenses)
-  const daysRemaining = getDaysRemaining(budget.endDate)
-  const remaining = budget.totalAmount - totalSpent
-  const recentExpenses = [...expenses]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5)
-
   return (
-    <div className="space-y-6">
-      <motion.div {...introMotion}>
-        <p className="text-center text-xs text-muted">Good {getGreeting()}</p>
-        <h1 className="font-heading text-center text-xl font-bold uppercase tracking-wide">
-          {budget.name}
+    <div className="relative isolate min-h-screen w-full overflow-hidden bg-card/40 px-8 pb-10 pt-20 md:px-16 md:pt-28 lg:px-24">
+      <div className="pointer-events-none absolute -right-32 -top-24 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
+
+      <section className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+          <Sparkles className="h-3.5 w-3.5" />
+          Welcome to UniWallet
+        </div>
+
+        <h1 className="font-heading mt-5 text-4xl font-bold leading-tight md:text-6xl">
+          Student money, organized from day one.
         </h1>
-      </motion.div>
 
-      <motion.div
-        {...sectionMotion}
-        transition={isMobile ? { duration: 0.24, delay: 0.03 } : undefined}
-        className="rounded-2xl border border-border bg-card p-5"
-      >
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-xs text-muted">Total Remaining</p>
-            <p className="font-heading mt-1 text-3xl font-bold text-accent">
-              {formatCurrency(Math.max(0, remaining))}
-            </p>
-            <p className="mt-0.5 text-xs text-muted">
-              of <span className="font-heading">{formatCurrency(budget.totalAmount)}</span> budget
-            </p>
-          </div>
-          <BudgetRing spent={totalSpent} total={budget.totalAmount} />
-        </div>
-      </motion.div>
+        <p className="mt-4 max-w-2xl text-sm text-muted md:text-base">
+          Build a realistic budget for your maintenance loan, track every pound, and stay in control
+          across the semester.
+        </p>
 
-      <motion.div
-        {...sectionMotion}
-        transition={isMobile ? { duration: 0.24, delay: 0.06 } : undefined}
-        className="grid grid-cols-3 gap-3"
-      >
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <Wallet className="mx-auto mb-1 h-4 w-4 text-accent" />
-          <p className="text-xs text-muted">Daily</p>
-          <p className="font-heading text-sm font-bold text-accent">
-            {formatCurrency(dailyAllowance)}
-          </p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <CalendarClock className="mx-auto mb-1 h-4 w-4 text-accent" />
-          <p className="text-xs text-muted">Days Left</p>
-          <p className="font-heading text-sm font-bold text-accent">{daysRemaining}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <TrendingDown className="mx-auto mb-1 h-4 w-4 text-accent" />
-          <p className="text-xs text-muted">Spent</p>
-          <p className="font-heading text-sm font-bold text-accent">
-            {formatCurrency(totalSpent)}
-          </p>
-        </div>
-      </motion.div>
-
-      <motion.div
-        {...sectionMotion}
-        transition={isMobile ? { duration: 0.24, delay: 0.09 } : undefined}
-      >
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-muted">Recent Expenses</h2>
-          {expenses.length > 0 && (
-            <Link
-              href="/history"
-              className="text-xs text-accent hover:underline"
-            >
-              View All
-            </Link>
-          )}
-        </div>
-        {recentExpenses.length > 0 ? (
-          <div className="space-y-2">
-            {recentExpenses.map((expense) => {
-              const category = budget.categories.find(
-                (c) => c.id === expense.categoryId
-              )
-              return (
-                <ExpenseItem
-                  key={expense.id}
-                  expense={expense}
-                  category={category}
-                />
-              )
-            })}
-          </div>
-        ) : (
+        <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link
-            href="/add"
-            className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border py-8 text-muted transition-colors hover:border-accent hover:text-accent"
+            href="/setup"
+            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
           >
-            <PlusCircle className="h-8 w-8" />
-            <span className="text-sm">Add your first expense</span>
+            Set Up Your Budget
+            <ArrowRight className="h-4 w-4" />
           </Link>
-        )}
-      </motion.div>
+        </div>
+      </section>
 
-      <motion.div
-        {...sectionMotion}
-        transition={isMobile ? { duration: 0.24, delay: 0.12 } : undefined}
-      >
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-muted">Categories</h2>
-          <Link href="/goals" className="text-xs text-accent hover:underline">
-            Set Goals
-          </Link>
-        </div>
-        {allocatedCategories.length > 6 && (
-          <div className="relative mb-3">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-            <input
-              type="text"
-              value={categoryQuery}
-              onChange={(e) => setCategoryQuery(e.target.value)}
-              placeholder="Search categories"
-              className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm outline-none transition-colors focus:border-accent"
-            />
-          </div>
-        )}
-        <div className="grid grid-cols-2 gap-2">
-          {visibleCategories.map((cat) => (
-              <CategoryCard
-                key={cat.id}
-                category={cat}
-                spent={getCategorySpent(expenses, cat.id)}
-                compact
-              />
-            ))}
-        </div>
-      </motion.div>
+      <section className="relative z-10 mx-auto mt-16 w-full max-w-6xl md:mt-20">
+        <ul className="space-y-3">
+          {FEATURE_POINTS.map((point) => {
+            const Icon = point.icon
+          return (
+            <li key={point.title} className="flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/70 bg-background/45 text-accent backdrop-blur-sm">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="text-sm font-medium">{point.title}</span>
+            </li>
+          )
+        })}
+        </ul>
+      </section>
     </div>
   )
-}
-
-function getGreeting(): string {
-  const hour = new Date().getHours()
-  if (hour < 12) return "morning"
-  if (hour < 18) return "afternoon"
-  return "evening"
 }

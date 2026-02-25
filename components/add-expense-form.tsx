@@ -39,7 +39,7 @@ export default function AddExpenseForm() {
 
     dispatch({ type: "ADD_EXPENSE", payload: expense })
     setSubmitted(true)
-    setTimeout(() => router.push("/"), 800)
+    setTimeout(() => router.push("/dashboard"), 800)
   }
 
   if (submitted) {

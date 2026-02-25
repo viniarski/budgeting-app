@@ -39,7 +39,7 @@ export default function GoalsPage() {
       onSave={(categories) =>
         dispatch({ type: "SET_BUDGET", payload: { ...budget, categories } })
       }
-      onSaved={() => router.push("/")}
+      onSaved={() => router.push("/dashboard")}
     />
   )
 }

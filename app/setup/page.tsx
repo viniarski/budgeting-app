@@ -31,7 +31,7 @@ export default function SetupPage() {
 
   useEffect(() => {
     if (isHydrated && state.isOnboarded) {
-      router.replace("/")
+      router.replace("/dashboard")
     }
   }, [isHydrated, state.isOnboarded, router])
 
@@ -97,7 +97,7 @@ export default function SetupPage() {
     }
 
     dispatch({ type: "SET_BUDGET", payload: budget })
-    router.push("/")
+    router.push("/dashboard")
   }
 
   return (

@@ -29,7 +29,7 @@ export default function Header() {
     <>
       <header className="desktop-header fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4 md:h-16 md:max-w-none md:px-6">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/dashboard" className="flex items-center gap-2.5">
             <span
               className="inline-block h-16 w-16 bg-current"
               style={{

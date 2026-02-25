@@ -25,7 +25,7 @@ type NavTab = {
 };
 
 const primaryTabs: NavTab[] = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/add", label: "Add", icon: Plus },
   { href: "/calculator", label: "Calculator", icon: Calculator },
   { href: "/marketplace", label: "Offers", icon: Tag },

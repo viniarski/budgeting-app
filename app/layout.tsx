@@ -5,10 +5,9 @@ import "./globals.css"
 import { BudgetProvider } from "@/contexts/budget-context"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { SidebarProvider } from "@/contexts/sidebar-context"
-import Header from "@/components/header"
-import BottomNav from "@/components/bottom-nav"
 import DisableNumberWheel from "@/components/disable-number-wheel"
 import KPITracker from "@/components/kpi-tracker"
+import AppShell from "@/components/app-shell"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,11 +75,7 @@ export default function RootLayout({
               <Suspense fallback={null}>
                 <KPITracker />
               </Suspense>
-              <Header />
-              <main className="desktop-main mx-auto max-w-md px-4 pb-24 pt-18 md:mr-6 md:max-w-none md:px-6 md:pb-8 md:pt-22">
-                {children}
-              </main>
-              <BottomNav />
+              <AppShell>{children}</AppShell>
             </BudgetProvider>
           </SidebarProvider>
         </ThemeProvider>

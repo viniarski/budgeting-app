@@ -80,7 +80,7 @@ describe("AddExpenseForm", () => {
     expect(screen.getByText("Expense Added!")).toBeInTheDocument()
 
     vi.advanceTimersByTime(800)
-    expect(pushMock).toHaveBeenCalledWith("/")
+    expect(pushMock).toHaveBeenCalledWith("/dashboard")
   })
 
   it("blocks scientific notation and sign characters in amount input", () => {

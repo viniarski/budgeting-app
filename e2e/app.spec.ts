@@ -5,7 +5,7 @@ test("new user can complete onboarding", async ({ page }) => {
   await clearAppStorage(page)
 
   await page.goto("/")
-  await expect(page.getByText("Welcome, Student!")).toBeVisible()
+  await expect(page.getByText("Welcome to UniWallet")).toBeVisible()
 
   await page.getByRole("link", { name: "Set Up Your Budget" }).click()
   await expect(page).toHaveURL(/\/setup$/)
@@ -20,7 +20,7 @@ test("new user can complete onboarding", async ({ page }) => {
   await firstAmountInput.fill("500")
 
   await page.getByRole("button", { name: "Start Budgeting" }).click()
-  await expect(page).toHaveURL(/\/$/)
+  await expect(page).toHaveURL(/\/dashboard$/)
   await expect(page.getByRole("heading", { name: /monthly budget/i })).toBeVisible()
 })
 
@@ -36,7 +36,7 @@ test("user can add an expense from add page", async ({ page }) => {
 
   await page.getByRole("button", { name: "Add Expense" }).click()
   await expect(page.getByText("Expense Added!")).toBeVisible()
-  await expect(page).toHaveURL(/\/$/)
+  await expect(page).toHaveURL(/\/dashboard$/)
   await expect(page.getByText("Test expense")).toBeVisible()
 })
 

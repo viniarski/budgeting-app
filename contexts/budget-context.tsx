@@ -77,7 +77,17 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
 
     async function hydrate() {
       const local = loadState()
-      let nextState = local
+      const localHasState = hasMeaningfulState(local)
+      const localSerialized = JSON.stringify(local)
+
+      // Unblock UI immediately from local state; DB sync continues in background.
+      if (!cancelled) {
+        if (localHasState) {
+          dispatch({ type: "HYDRATE", payload: local })
+        }
+        setIsHydrated(true)
+      }
+
       const stateId = getStateId()
 
       try {
@@ -87,19 +97,17 @@ export function BudgetProvider({ children }: { children: ReactNode }) {
         if (response.ok) {
           const data = (await response.json()) as { state?: BudgetState | null }
           if (data.state && hasMeaningfulState(data.state)) {
-            nextState = data.state
             saveState(data.state)
+            if (!cancelled) {
+              const remoteSerialized = JSON.stringify(data.state)
+              if (remoteSerialized !== localSerialized) {
+                dispatch({ type: "HYDRATE", payload: data.state })
+              }
+            }
           }
         }
       } catch {
         // If DB is unavailable, keep local state only.
-      }
-
-      if (!cancelled) {
-        if (hasMeaningfulState(nextState)) {
-          dispatch({ type: "HYDRATE", payload: nextState })
-        }
-        setIsHydrated(true)
       }
     }
 
