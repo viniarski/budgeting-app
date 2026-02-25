@@ -1,23 +1,19 @@
 import { NextResponse } from "next/server"
 import { query } from "@/lib/db"
 import { ensureKpiTables } from "@/lib/kpi-db"
+import { KpiPageViewEndBodySchema } from "@/lib/validators/kpi"
 
 export const runtime = "nodejs"
-
-type Body = {
-  pageViewId?: string
-  scrollDepthPct?: number
-  isBounce?: boolean
-}
 
 export async function POST(request: Request) {
   try {
     await ensureKpiTables()
-    const body = (await request.json()) as Body
+    const parsed = KpiPageViewEndBodySchema.safeParse(await request.json())
 
-    if (!body.pageViewId) {
+    if (!parsed.success) {
       return NextResponse.json({ error: "pageViewId is required" }, { status: 400 })
     }
+    const body = parsed.data
 
     const scroll =
       typeof body.scrollDepthPct === "number"

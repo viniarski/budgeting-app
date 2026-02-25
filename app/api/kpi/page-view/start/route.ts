@@ -1,26 +1,19 @@
 import { NextResponse } from "next/server"
 import { query } from "@/lib/db"
 import { ensureKpiTables } from "@/lib/kpi-db"
+import { KpiPageViewStartBodySchema } from "@/lib/validators/kpi"
 
 export const runtime = "nodejs"
-
-type Body = {
-  sessionId?: string
-  anonymousId?: string
-  pageUrl?: string
-  pagePath?: string
-  pageTitle?: string
-  referrerUrl?: string
-}
 
 export async function POST(request: Request) {
   try {
     await ensureKpiTables()
-    const body = (await request.json()) as Body
+    const parsed = KpiPageViewStartBodySchema.safeParse(await request.json())
 
-    if (!body.sessionId || !body.anonymousId || !body.pageUrl || !body.pagePath) {
+    if (!parsed.success) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
+    const body = parsed.data
 
     const rows = await query<{ id: string }>(
       `

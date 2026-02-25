@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server"
 import { BudgetState } from "@/lib/types"
 import { query } from "@/lib/db"
+import { z } from "zod"
+import { BudgetStateSchema } from "@/lib/validators/domain"
 
 export const runtime = "nodejs"
 
 function getStateIdFromUrl(request: Request): string {
   const { searchParams } = new URL(request.url)
-  const stateId = searchParams.get("stateId")?.trim()
-  return stateId && stateId.length > 0 ? stateId : "default"
+  const raw = searchParams.get("stateId")
+  const parsed = z.string().trim().min(1).safeParse(raw)
+  return parsed.success ? parsed.data : "default"
 }
 
 async function ensureStateTable() {
@@ -19,17 +22,6 @@ async function ensureStateTable() {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
     `
-  )
-}
-
-function isBudgetState(value: unknown): value is BudgetState {
-  if (!value || typeof value !== "object") return false
-  const obj = value as Record<string, unknown>
-  return (
-    "budget" in obj &&
-    "expenses" in obj &&
-    Array.isArray(obj.expenses) &&
-    typeof obj.isOnboarded === "boolean"
   )
 }
 
@@ -59,7 +51,8 @@ export async function POST(request: Request) {
     const stateId = getStateIdFromUrl(request)
 
     const body = (await request.json()) as { state?: unknown }
-    if (!isBudgetState(body.state)) {
+    const parsed = BudgetStateSchema.safeParse(body.state)
+    if (!parsed.success) {
       return NextResponse.json({ error: "Invalid state payload" }, { status: 400 })
     }
 
@@ -70,7 +63,7 @@ export async function POST(request: Request) {
       ON CONFLICT (id)
       DO UPDATE SET state = EXCLUDED.state, updated_at = now()
       `,
-      [stateId, JSON.stringify(body.state)]
+      [stateId, JSON.stringify(parsed.data)]
     )
 
     return NextResponse.json({ ok: true }, { status: 200 })

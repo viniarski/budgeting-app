@@ -1,6 +1,7 @@
 import { BudgetState } from "./types"
 import { STORAGE_KEY } from "./constants"
 import { Listing, DEFAULT_LISTINGS, LISTINGS_STORAGE_KEY } from "./listings"
+import { BudgetStateSchema, ListingSchema } from "./validators/domain"
 
 const DEFAULT_STATE: BudgetState = {
   budget: null,
@@ -13,7 +14,8 @@ export function loadState(): BudgetState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return DEFAULT_STATE
-    return JSON.parse(raw) as BudgetState
+    const parsed = BudgetStateSchema.safeParse(JSON.parse(raw))
+    return parsed.success ? parsed.data : DEFAULT_STATE
   } catch {
     return DEFAULT_STATE
   }
@@ -41,7 +43,8 @@ export function loadListings(): Listing[] {
   try {
     const raw = localStorage.getItem(LISTINGS_STORAGE_KEY)
     if (!raw) return DEFAULT_LISTINGS
-    return JSON.parse(raw) as Listing[]
+    const parsed = ListingSchema.array().safeParse(JSON.parse(raw))
+    return parsed.success ? parsed.data : DEFAULT_LISTINGS
   } catch {
     return DEFAULT_LISTINGS
   }

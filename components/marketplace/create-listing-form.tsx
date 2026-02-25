@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { X } from "lucide-react"
 import {
   Listing,
@@ -41,6 +41,22 @@ export default function CreateListingForm({
     category !== "" &&
     condition !== ""
 
+  useEffect(() => {
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyTouchAction = document.body.style.touchAction
+    const originalHtmlOverflow = document.documentElement.style.overflow
+
+    document.body.style.overflow = "hidden"
+    document.body.style.touchAction = "none"
+    document.documentElement.style.overflow = "hidden"
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.touchAction = originalBodyTouchAction
+      document.documentElement.style.overflow = originalHtmlOverflow
+    }
+  }, [])
+
   function handleSubmit() {
     if (!isValid || !category || !condition) return
 
@@ -59,10 +75,10 @@ export default function CreateListingForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-2xl border border-border bg-background p-5 sm:rounded-2xl">
+    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 px-2 pb-20 pt-2 overscroll-contain sm:items-center sm:p-4">
+      <div className="flex max-h-[calc(100dvh-6rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-border bg-background">
         {/* Header */}
-        <div className="mb-5 flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="text-lg font-bold">Sell Something</h2>
           <button
             onClick={onClose}
@@ -72,7 +88,7 @@ export default function CreateListingForm({
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
           {/* Title */}
           <div>
             <label className="mb-1 block text-xs font-medium text-muted">
@@ -99,6 +115,11 @@ export default function CreateListingForm({
               step="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault()
+                }
+              }}
               className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
             />
           </div>
@@ -162,8 +183,10 @@ export default function CreateListingForm({
               className="w-full resize-none rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-accent"
             />
           </div>
+        </div>
 
-          {/* Submit */}
+        <div className="border-t border-border bg-background px-5 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3">
+          {/* Submit stays visible while body scrolls */}
           <button
             onClick={handleSubmit}
             disabled={!isValid}

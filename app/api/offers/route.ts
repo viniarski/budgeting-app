@@ -1,19 +1,8 @@
 import { NextResponse } from "next/server"
 import { DEFAULT_OFFERS, OfferItem } from "@/lib/offers"
+import { OfferItemSchema } from "@/lib/validators/domain"
 
 export const runtime = "nodejs"
-
-function isOfferItem(value: unknown): value is OfferItem {
-  if (!value || typeof value !== "object") return false
-  const obj = value as Record<string, unknown>
-  return (
-    typeof obj.id === "string" &&
-    typeof obj.name === "string" &&
-    typeof obj.desc === "string" &&
-    typeof obj.discount === "string" &&
-    typeof obj.category === "string"
-  )
-}
 
 function normalizeLivePayload(payload: unknown): OfferItem[] {
   const raw = Array.isArray(payload)
@@ -24,7 +13,10 @@ function normalizeLivePayload(payload: unknown): OfferItem[] {
       ? (payload as { offers: unknown[] }).offers
       : []
 
-  return raw.filter(isOfferItem)
+  return raw
+    .map((item) => OfferItemSchema.safeParse(item))
+    .filter((result) => result.success)
+    .map((result) => result.data)
 }
 
 export async function GET() {

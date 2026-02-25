@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server"
 import { query } from "@/lib/db"
 import { ensureKpiTables } from "@/lib/kpi-db"
+import { KpiSessionEndBodySchema } from "@/lib/validators/kpi"
 
 export const runtime = "nodejs"
-
-type Body = {
-  sessionId?: string
-}
 
 export async function POST(request: Request) {
   try {
     await ensureKpiTables()
-    const body = (await request.json()) as Body
+    const parsed = KpiSessionEndBodySchema.safeParse(await request.json())
 
-    if (!body.sessionId) {
+    if (!parsed.success) {
       return NextResponse.json({ error: "sessionId is required" }, { status: 400 })
     }
+    const body = parsed.data
 
     await query(
       `

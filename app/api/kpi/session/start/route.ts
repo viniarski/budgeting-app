@@ -1,26 +1,19 @@
 import { NextResponse } from "next/server"
 import { query } from "@/lib/db"
 import { ensureKpiTables, parseBrowser, parseDeviceType, parseOs } from "@/lib/kpi-db"
+import { KpiSessionStartBodySchema } from "@/lib/validators/kpi"
 
 export const runtime = "nodejs"
-
-type Body = {
-  anonymousId?: string
-  referrer?: string
-  utmSource?: string
-  utmMedium?: string
-  utmCampaign?: string
-  country?: string
-}
 
 export async function POST(request: Request) {
   try {
     await ensureKpiTables()
 
-    const body = (await request.json()) as Body
-    if (!body.anonymousId) {
+    const parsed = KpiSessionStartBodySchema.safeParse(await request.json())
+    if (!parsed.success) {
       return NextResponse.json({ error: "anonymousId is required" }, { status: 400 })
     }
+    const body = parsed.data
 
     const ua = request.headers.get("user-agent")
     const forwardedFor = request.headers.get("x-forwarded-for")
