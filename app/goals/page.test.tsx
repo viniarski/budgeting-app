@@ -83,6 +83,6 @@ describe("GoalsPage", () => {
     )
 
     vi.advanceTimersByTime(500)
-    expect(pushMock).toHaveBeenCalledWith("/")
+    expect(pushMock).toHaveBeenCalledWith("/dashboard")
   })
 })
